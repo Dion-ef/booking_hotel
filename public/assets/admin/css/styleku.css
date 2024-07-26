@@ -1,0 +1,708 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+.body{
+    background-color: #f5f2f2;
+}
+
+.navbar-header{
+    font-weight: 500;
+    font-size: 30px;
+}
+
+/* login */
+.login{
+    background-color: rgb(251, 255, 255);
+    background-image: url("images/hero_4.jpg");
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+.site-hero-ku{
+    background-color: rgb(255, 255, 255);
+    background-image: url("images/hero_4.jpg");
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    margin-top: 0;
+    top: 0;
+    min-height: 700px;
+    align-items: center;
+    display: flex;
+    z-index: 1;
+
+
+}
+.site-hero-ku::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("images/hero_4.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: brightness(50%);
+    z-index: -1;
+}
+.border-register{
+    margin: 0px auto;
+    margin-top: 20px;
+    padding: 0px 30px 0px 30px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border: 1px solid #bcbcbc;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+.container-login{
+    width: 30%;
+    margin-top: 40px;
+    margin-top: 40px;
+    margin: auto;
+}
+.r-label{
+    font-weight: 500;
+}
+.r-text{
+    font-weight: 400;
+    font-size: 12px;
+}
+.r-btn{
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 0px;
+}
+.login-header {
+    padding: 25px 0;
+    text-align: center;
+    font-size: 35px;
+    font-weight: 700;
+}
+.login-header center{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 48px;
+    color: black;
+    margin-bottom: 40px;
+}
+.form{
+    font-weight: 600;
+}
+.form label{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    color: black;
+}
+.form input{
+    background: #FFFFFF;
+    border: 1px solid #bcbcbc ;
+    box-sizing: border-box;
+    box-shadow: black ;
+    border-radius: 8px;
+    margin-bottom: 18px;
+}
+.form button{
+    width: 100%;
+    height: 42px;
+    background: black;
+    border-radius: 8px;
+    color: #FFFFFF;
+    margin: 20px 0 20px 0;
+}
+.signup{
+    font-size: 10px;
+    display: inline;
+}
+.container-l{
+    width: 90%;
+    margin: auto;
+    height: 100%;
+}
+.icon-container{
+    height: 40px;
+    width: 40px;
+    border: 1px solid #bcbcbc;
+    border-radius: 5px;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.icon-container img{
+    color: #bcbcbc;
+    height: 55%;
+}
+.pilih-login{
+    font-size: 12px;
+    color: #bcbcbc;
+}
+
+.pilih-container{
+    width: 100px;
+    height: 40px;
+    color: rgb(161, 40, 40);
+    margin: auto;
+}
+
+ 
+/* dashboard */
+.sidebar-container{
+    background: linear-gradient(to bottom, rgb(40, 1, 91), rgb(58, 3, 130), rgb(94, 42, 161),rgb(124, 90, 167));
+    font-family: "Roboto", sans-serif;
+    width: 230px;
+    height: 100vh;
+    transition: all ease-in .3s;
+    
+}
+.sidebar-container .nav-link i{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.sidebar-container .nav-link a{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.sidebar-container .sidebar-text-header{
+    font-size: 12px;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+}
+/* untuk responsive maka pada sidebar-container akan ditambahkan class hide */
+.sidebar-container.hide{
+    width: 80px;
+    transition: all ease-out .3s;
+    padding: 0px;
+}
+.sidebar-container.hide .sidebar-text-header {
+    display: none;
+    color: black;
+    transition: all ease-in-out .3s;
+}
+.sidebar-container.hide .side-email{
+    display: none;
+    transition: all .3s ease-in-out;
+
+}
+.sidebar-container.hide .side-name{
+    display: none;
+    transition: all .3s ease-in-out;
+
+}
+.sidebar-container.hide .sidebar-menu .nav-link{
+    display: flex;
+    margin-left: 0;
+    margin-bottom: 7px;
+
+    
+}
+.sidebar-container.hide .sidebar-menu .nav-link .side-menu{
+    display: none;
+    
+}
+.nav-navbar.hide .profil-dropdown{
+    width: 40%;
+    transition: all .3s ease-in;
+}
+.nav-navbar.hide .search{
+    width: 450px;
+    transition: all .3s ease-in;
+}
+.side-name{
+    font-size: 14px;
+    color: #FFFFFF;
+    font-weight: 500;
+    margin-top: 13px;
+    margin-bottom: 5px;
+}
+.side-email{
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: 300;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.sidebar-menu{
+
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.sidebar-menu a{
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 15px;
+}
+.sidebar-menu:hover{
+    background-color: #5b5a5a5e;
+
+}
+
+.sidebar-icon{
+    margin-right: 12px;
+}
+
+
+/* nav */
+.main-wrapper{
+    min-height: 100vh;
+    margin-left: 30px;
+    width: 100%;
+    margin-right: 30px;
+    font-family: "Roboto", sans-serif;
+    /* background-color: bisque; */
+}
+.nav-navbar{
+    height: 60px;
+    width: 100%;
+    margin-top: 10px;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: space-between;
+}
+.nav-bars{
+    color: black;
+    font-size: 25px;
+    margin-top: 20px;
+    cursor: pointer;
+
+}
+.nav-navbar p{
+    margin-top: 20px;
+    margin-left: 50px;
+    font-size: 16px;
+    font-weight: 400;
+}
+.search{
+    height: 40px;
+    margin-top: 10px;
+    width: 320px;
+    margin-left: 100px;
+    transition: all .3s ease-out;
+
+}
+.search input::placeholder{
+    font-size: 12px;
+}
+.search input{
+    border-radius: 25px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.profil-dropdown{
+    display: inline-flex;
+    width: 45%;
+    margin-left: 20px;
+    justify-content: flex-end;
+    transition: all .3s ease-out;
+}
+.profil-dropdown .name{
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 15px;
+}
+.profil-dropdown .message{
+    margin-top: 16px;
+    margin-left: 15px;
+}
+.profil-dropdown span{
+    color: black;
+}
+
+/* select */
+.select-container{
+    height: 60px;
+    width: 100%;
+    background-color: aqua;
+}
+.status{
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: lowercase;
+}
+.status::first-letter{
+    text-transform: uppercase;
+}
+.fasilitas{
+    font-size: 16px;
+    font-weight:400;
+    margin-left: 20px;
+    text-transform: lowercase;
+}
+.fasilitas::first-letter{
+    text-transform: uppercase;
+}
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* Jarak antar gambar */
+}
+.custom-img {
+        border-radius: 0 !important; /* Menimpa aturan template admin */
+        object-fit: contain !important; /* Memastikan gambar tidak terpotong */
+        width: 5rem !important; /* Atur lebar gambar */
+        height: 5rem !important; 
+}
+
+
+
+/* admin */
+/* profil */
+.p-img{
+    border: none;
+    margin:10px auto 15px auto;
+    transition: all .2s ease-in;
+}
+.data{
+    height: 250px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+.l-card{
+    width: 18rem;
+    margin: auto;
+    align-items: flex-end;
+    position: relative;
+    display: flex;
+
+}
+.l-container{
+    height: 700px;
+    width: 100%;
+    background-color: bisque;
+}
+
+/* Kamar */
+.btn-action{
+    font-weight: 500;
+    border-radius: 10px;
+    color: #ffffff;
+}
+
+.pencarian{
+    justify-content: flex-end;
+}
+.kamar{
+    background-image: url('images/img_1.jpg');
+}
+.table-responsive{
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+}
+.d-container{
+    height: 120px;
+    width: 260px;
+    background-color: #ffffff;
+    margin: auto;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px;
+}
+.d-col-container{
+    width: 170px;
+    height: 100px;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-family: "Roboto", sans-serif;
+}
+.d-col-container h6{
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+}
+.child-1-container{
+    height: 60px;
+    width: 60px;
+    background-color: rgb(26, 128, 53);
+    top: 25%;
+    left: 60%;
+    border-radius: 5px;
+    box-shadow: rgb(26, 128, 53) 0px 5px 15px;
+    position: relative;
+}
+.child-1-container i{
+    margin-top: 18px;
+    margin-left: 17px;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+
+
+.child-2-container{
+    height: 60px;
+    width: 60px;
+    background-color: rgb(16, 125, 168);
+    top: 25%;
+    left: 60%;
+    border-radius: 5px;
+    box-shadow: rgb(16, 125, 168) 0px 5px 15px;
+    position: relative;
+}
+.child-2-container i{
+    margin-top: 18px;
+    margin-left: 17px;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+.child-3-container{
+    height: 60px;
+    width: 60px;
+    background-color: rgb(228, 70, 13);
+    top: 25%;
+    left: 60%;
+    border-radius: 5px;
+    box-shadow: rgb(228, 70, 13) 0px 5px 15px;
+    position: relative;
+}
+.child-3-container i{
+    margin-top: 18px;
+    margin-left: 17px;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+
+/* admin booking */
+.container-booking {
+    max-width: 600px;
+}
+.container-booking h1{
+    font-family: 'Courier New', Courier, monospace;
+
+}
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.card-body {
+    padding: 20px;
+}
+.card-body h1, h3 {
+    font-family: 'Courier New', Courier, monospace;
+}
+hr {
+    border-top: 1px dashed #000;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .card, .card * {
+        visibility: visible;
+    }
+    .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+    }
+    .row, .col {
+        display: block;
+        width: 100%;
+    }
+    .btn {
+        display: none;
+    }
+    .booking-btn{
+        display: none;
+    }
+}
+
+
+/* datatbles */
+.pagination {
+    display: flex;
+    justify-content: center; /* Tengah secara horizontal */
+    margin-top: 1rem;
+}
+
+.pagination .page-item {
+    margin: 0 0.25rem; /* Jarak antar item */
+}
+
+.pagination .page-link {
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.pagination .page-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+}
+
+.pagination .active .page-link {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.dataTables_filter {
+    margin-top: 10px;
+    margin-bottom: 25px; /* Atur sesuai kebutuhan */
+}
+
+
+
+@media screen and (max-width:922px){
+    .border-register{
+        margin: 0px auto;
+        padding: 0px 30px 0px 30px;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        border: 1px solid #bcbcbc;
+        box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    }
+    .container-login{
+        width: 65%;
+        margin: auto;
+        margin-top: 150px;
+    }
+    .sidebar-container{
+        background: linear-gradient(to bottom, rgb(40, 1, 91), rgb(58, 3, 130), rgb(94, 42, 161),rgb(124, 90, 167));
+        font-family: "Roboto", sans-serif;
+        width: 200px;
+        height: 100vh;
+        transition: all ease-in .3s;
+        
+    }
+    .nav-navbar p{
+        display: none;
+    }
+    .profil-dropdown .name{
+    margin-top: 20px;
+    margin-right: 15px;
+    margin-left: 5px;
+}
+
+
+}
+@media screen and (max-width:576px){
+    .border-register{
+        margin: 0px auto;
+        padding: 0px 30px 0px 30px;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        border: 1px solid #bcbcbc;
+        box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    }
+    .container-login{
+        width: 75%;
+        margin: auto;
+        margin-top: 112px;
+    }
+    .login-header center{
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 20px;
+        color: black;
+        margin-bottom: 15px;
+    }
+    .form{
+        font-weight: 600;
+    }
+    .form label{
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 24px;
+        color: black;
+    }
+    .form input{
+        background: #FFFFFF;
+        border: 1px solid #bcbcbc ;
+        box-sizing: border-box;
+        box-shadow: black ;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .form input::placeholder{
+        font-size: 12px;
+    }
+    .form button{
+        width: 100%;
+        height: 42px;
+        background: black;
+        border-radius: 8px;
+        color: #FFFFFF;
+        margin: 20px 0 20px 0;
+    }
+    .icon-container{
+        height: 30px;
+        width: 30px;
+        border: 1px solid #bcbcbc;
+        border-radius: 5px;
+        margin: auto;
+        padding-top: 5px;
+        margin-top: 0;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    .icon-container img{
+        color: #bcbcbc;
+        height: 50%;
+    }
+    .pilih-login{
+        font-size: 10px;
+        color: #bcbcbc;
+    }
+
+    .pilih-container{
+        width: 100%;
+        height: 50px;
+        background-color: aqua;
+        margin: auto;
+        justify-content: center;
+        display: flex;
+    }
+
+    /* admin */
+    .sidebar-container{
+        display: none;
+        
+    }
+    .sidebar-container.hide{
+        display: none;
+    }
+    .nav-bars{
+        color: black;
+        font-size: 18px;
+        margin-top: 20px;
+        cursor: pointer;
+    
+    }
+    .child-container{
+        height: 100px;
+        width: 100px;
+        display: flex;
+        background-color: aqua;
+    }
+    .data{
+        height: 250px;
+        width: 100%;
+        display: block;
+    }
+    
+}
+@media screen and (max-width:350px){
+    
+}
