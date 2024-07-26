@@ -1,5 +1,8 @@
 @extends('layout.admins')
 
+@section('link')
+<link href="{{asset('assets/admin/css/styleku.css')}}" rel="stylesheet">
+@endSection
 @section('konten')
 <div class="data">
 
@@ -55,11 +58,16 @@
 <div class="l-container">
     <div class="row">
         <div class="col-md-6">
-            <h1>ddd</h1>
+            <div class="chart-container">
+            <canvas id="bookingChart" data-bookings="{{ $bookingsJson }}"></canvas>
+            </div>
         </div>
         <div class="col-md-6">
             <h1>sss</h1>
         </div>
     </div>
 </div>
+@endSection
+@section('script')
+<script src="{{asset('assets/js/chartku.js')}}"></script>
 @endSection

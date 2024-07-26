@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{asset('assets/admin/vendors/css/vendor.bundle.base.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" rel="stylesheet">
 
+    
     <!-- inject:css -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
 
@@ -22,6 +23,7 @@
 
     <!-- datatables -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    @yield('link')
 </head>
 
 <body>

@@ -22,7 +22,14 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $totalKamar = Kamar::count();
-        return view('admin.dashboard', compact('data', 'totalKamar'));
+        $bookings = Pemesanan::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('count(*) as count')
+        )
+        ->groupBy('date')
+        ->get();
+        $bookingsJson = $bookings->toJson();
+        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson'));
     }
     // update Profil
     public function profilUpdate(Request $request)
