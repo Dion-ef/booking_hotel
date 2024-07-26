@@ -16,7 +16,7 @@
             </div>
             <div class="col-md-6">
                 <div class="child-1-container">
-                <i class="fa fa-store sidebar-icon"></i>
+                    <i class="fa fa-store sidebar-icon"></i>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-6">
                 <div class="child-2-container">
-                <i class="fa fa-folder-open sidebar-icon" aria-hidden="true"></i>
+                    <i class="fa fa-folder-open sidebar-icon" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -44,12 +44,12 @@
             </div>
             <div class="col-md-6">
                 <div class="child-3-container">
-                <i class="fa fa-cart-shopping sidebar-icon" aria-hidden="true"></i>
+                    <i class="fa fa-cart-shopping sidebar-icon" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
     </div>
-    
+
 
 
 </div>
@@ -59,7 +59,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="chart-container">
-            <canvas id="bookingChart" data-bookings="{{ $bookingsJson }}"></canvas>
+                <canvas id="audience-chart" data-bookings="{{ $bookingsJson }}"></canvas>
             </div>
         </div>
         <div class="col-md-6">
