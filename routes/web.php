@@ -34,7 +34,7 @@ Route::get('/auth/google', [App\Http\Controllers\LoginController::class, 'redire
 Route::get('/google/callback', [App\Http\Controllers\LoginController::class, 'callback'])->name('google.callback');
 
 // rout untuk admin
-Route::group(['middleware' => ['auth:admin']], function () {
+Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::get('/dashboard/admin', [App\Http\Controllers\AdminController::class, 'dashboard']);
     Route::get('/kamar/admin', [App\Http\Controllers\AdminController::class, 'kamar']);
     Route::get('/kamar/get', [App\Http\Controllers\AdminController::class, 'getKamar'])->name('kamar.data');
@@ -60,8 +60,6 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/pencarian/riwayat', [App\Http\Controllers\AdminController::class, 'pencarianRiwayat']);
     Route::get('/riwayat/admin', [App\Http\Controllers\AdminController::class, 'riwayat']);
     Route::get('/riwayat/get', [App\Http\Controllers\AdminController::class, 'getRiwayat'])->name('admin.riwayat.data');
-    Route::get('/cetak/admin', [App\Http\Controllers\PdfController::class, 'cetakPdf']);
-    Route::get('/pdf', [App\Http\Controllers\PdfController::class, 'pdf']);
     Route::get('/fasilitas/admin', [App\Http\Controllers\AdminController::class, 'fasilitas']);
     Route::get('/fasilitas/get', [App\Http\Controllers\AdminController::class, 'getFasilitas'])->name('admin.fasilitas.data');
     Route::post('/tambah/fasilitas', [App\Http\Controllers\AdminController::class, 'tambahFasilitas']);
@@ -74,6 +72,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
 
 });
+
 
 // rout untuk user yang sudah login
 Route::group(['middleware' => ['auth:user']], function () {
@@ -88,4 +87,9 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::post('/user/pesan/{id}', [App\Http\Controllers\PesananController::class, 'checkIn'])->middleware('auth');
     Route::get('/booking/konfirmasi/{id}', [App\Http\Controllers\PesananController::class, 'konfirmasi'])->middleware('auth')->name('booking.confirm');
     Route::get('/cek-ketersediaan', [UserController::class, 'cekKetersediaan'])->name('cek-ketersediaan');
+});
+
+Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], function () {
+    Route::get('/dashboard/resepsionis', [App\Http\Controllers\ResepsionisController::class, 'index']);
+    // Route lain untuk resepsionis
 });

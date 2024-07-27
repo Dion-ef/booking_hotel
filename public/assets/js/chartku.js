@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var ctx = bookingChartElement.getContext('2d');
     var bookingChart = new Chart(ctx, {
-        type: 'bar', // tipe chart bisa disesuaikan
+        type: 'pie', // tipe chart bisa disesuaikan
         data: {
             labels: bookings.map(booking => booking.date),
             datasets: [{

@@ -19,12 +19,14 @@ class AdminSeeder extends Seeder
             [
                 'name'=>'Dion EKa Fahrezi',
                 'email'=>'admin1@gmail.com',
-                'password'=>bcrypt('admin1')
+                'password'=>bcrypt('admin1'),
+                'role'=>'admin'
             ],
             [
                 'name'=>'Bayu Tri Prabowo',
-                'email'=>'admin2@gmail.com',
-                'password'=>bcrypt('admin2')
+                'email'=>'resepsionis1@gmail.com',
+                'password'=>bcrypt('resepsionis1'),
+                'role'=>'resepsionis'
             ],
         ];
 

@@ -33,12 +33,12 @@
 
             <!-- partial:./partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
-                <div class="header-text">
+                <!-- <div class="header-text">
                     <span>Pama Hotel</span>
-                </div>
+                </div> -->
                 
                 <ul class="nav">
-                <hr style="border: 1px solid white; width: 100%; margin: 20px auto;">
+                <!-- <hr style="border: 1px solid white; width: 100%; margin: 20px auto;"> -->
                     <li class="nav-item sidebar-category">
                         <p>Navigation</p>
                         <span></span>

@@ -70,24 +70,24 @@ class LoginController extends Controller
             'email'=>$request->email,
             'password'=>$request->password,
         ];
-            if(Auth::guard('admin')->attempt($infologin)){
-                return redirect('/dashboard/admin');
-            }elseif(Auth::guard('user')->attempt($infologin)){
-                return redirect('/user/index');
-            }
-
             // if(Auth::guard('admin')->attempt($infologin)){
-            //     $admin = Auth::guard('admin')->user();
-            //     if($admin->role=='admin'){
-            //         return redirect('/dashboard/admin');
-            //     }
-            //     elseif($admin->role=='resepsionis'){
-            //         return redirect('/dashboard/resepsionis');
-            //     }
-                
+            //     return redirect('/dashboard/admin');
             // }elseif(Auth::guard('user')->attempt($infologin)){
             //     return redirect('/user/index');
             // }
+
+            if(Auth::guard('admin')->attempt($infologin)){
+                $user = Auth::guard('admin')->user();
+
+                if ($user->role === 'admin') {
+                    return redirect('/dashboard/admin');
+                } elseif ($user->role === 'resepsionis') {
+                    return redirect('/dashboard/resepsionis');
+                }
+                
+            }elseif(Auth::guard('user')->attempt($infologin)){
+                return redirect('/user/index');
+            }
         
             return redirect('/login')->withErrors('Email atau Password salah ')->withInput();
         
