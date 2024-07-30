@@ -110,11 +110,12 @@
                                 <h1>Invoice</h1>
                                 <h4 class="text-muted"> | Date: {{$pemesanan->tgl_pemesanan}}</h4>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-xs-4"> 
                                 <div class="media">
                                     <div class="media-left">
-                                        <img class="media-object logo" src="https://dummyimage.com/70x70/000/fff&text=ACME" />
-                                    </div>
+                                        <!-- diisi img logo belga -->
+                                        <img class="media-object logo" src="https://dummyimage.com/70x70/000/fff&text=ACME" /> 
+                                    </div> 
                                     <ul class="media-body list-unstyled">
                                         <li><strong>Pama Hotel</strong></li>
                                         <li>Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan, <br>Kec.Tulungagung, Kabupaten Tulungagung<br>Telepon: 0123-456789</li>

@@ -84,16 +84,16 @@
                                 </div>
                                 <div class="pilih-container">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="icon-container">
                                                 <a href="{{route('google.redirect')}}"><img src="{{asset('assets/css/images/g.png')}}" alt=""></a>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-6">
                                             <div class="icon-container">
                                                 <a href=""><img src="{{asset('assets/css/images/f.webp')}}" alt=""></a>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
 

@@ -65,12 +65,6 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::post('/tambah/fasilitas', [App\Http\Controllers\AdminController::class, 'tambahFasilitas']);
     Route::post('/update/fasilitas', [App\Http\Controllers\AdminController::class, 'updateFasilitas']);
     Route::get('/hapus/fasilitas/{id}', [App\Http\Controllers\AdminController::class, 'hapusFasilitas']);
-
-
-
-
-
-
 });
 
 
@@ -89,7 +83,16 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::get('/cek-ketersediaan', [UserController::class, 'cekKetersediaan'])->name('cek-ketersediaan');
 });
 
+// Resepsionis
 Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], function () {
     Route::get('/dashboard/resepsionis', [App\Http\Controllers\ResepsionisController::class, 'index']);
-    // Route lain untuk resepsionis
+    Route::post('/update/profil/resepsionis', [App\Http\Controllers\ResepsionisController::class, 'profilUpdateResepsionis']);
+    Route::get('/resepsionis/kamar', [App\Http\Controllers\ResepsionisController::class, 'kamarResepsionis']);
+    Route::get('/resepsionis/get/kamar', [App\Http\Controllers\ResepsionisController::class, 'getKamarResepsionis'])->name('resepsionis.kamar');
+    Route::get('/resepsionis/booking', [App\Http\Controllers\ResepsionisController::class, 'bookingResepsionis']);
+    Route::get('/hapus/booking/resepsionis/{id}', [App\Http\Controllers\ResepsionisController::class, 'hapusBookingResepsionis']);
+    Route::get('/booking/resepsionis/get', [App\Http\Controllers\ResepsionisController::class, 'getBookingResepsionis'])->name('resepsionis.booking.data');
+    Route::get('/checkout/booking/{id}', [App\Http\Controllers\ResepsionisController::class, 'checkoutBookingResepsionis']);
+    Route::get('/resepsionis/riwayat', [App\Http\Controllers\ResepsionisController::class, 'riwayatResepsionis']);
+    Route::get('/resepsionis/riwayat/get', [App\Http\Controllers\ResepsionisController::class, 'getRiwayatResepsionis'])->name('resepsionis.riwayat.data');
 });

@@ -23,13 +23,25 @@ class AdminController extends Controller
         $data = Admin::where('id', $user)->first();
         $totalKamar = Kamar::count();
         $bookings = Pemesanan::select(
-            DB::raw('DATE(created_at) as date'),
+            DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
             DB::raw('count(*) as count')
         )
-        ->groupBy('date')
+        ->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))
         ->get();
-        $bookingsJson = $bookings->toJson();
-        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson'));
+    
+        // Menyusun data dalam format yang sesuai untuk chart
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $bookingsData = array_fill(0, 12, 0);
+    
+        foreach ($bookings as $booking) {
+            $monthIndex = (int) date('n', strtotime($booking->month));
+            $bookingsData[$monthIndex - 1] = $booking->count;
+        }
+    
+        // Konversi data menjadi JSON
+        $bookingsJson = json_encode($bookingsData);
+
+        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson','months'));
     }
     // update Profil
     public function profilUpdate(Request $request)
@@ -79,21 +91,6 @@ class AdminController extends Controller
             'status' => $request->status,
             'kapasitas' => $request->kapasitas,
         ]);
-        // $request->validate([
-        //     'fasilitas'=> 'required|string',
-        // ]);
-        // $emailArray = explode(',', $request->fasilitas);
-        // foreach ($emailArray as $email) {
-        //     Kamar::create([
-        //         'fasilitas' => trim($email),
-        //         'nama'=>$request->nama,
-        //         'kategori_id'=>$request->kategori_id,
-        //         'status'=>$request->status,
-        //         'kapasitas'=>$request->kapasitas,
-        //          // Hapus spasi ekstra di awal dan akhir
-        //     ]);
-        // }
-        // Alert::success('Success Title', 'Success Message');
         return redirect('/kamar/admin')->with('toast_success', 'Barang Berhasil ditambahkan!');
     }
     public function hapusKamar($id)
@@ -185,7 +182,7 @@ class AdminController extends Controller
             'fasilitas' => 'required|array'
         ]);
 
-        // Membuat kategori
+        
         $kategori = Kategori::create([
             'nama' => $request->nama,
             'harga' => $request->harga,
@@ -209,7 +206,7 @@ class AdminController extends Controller
         $kategori->harga = $request->harga;
         $kategori->save();
 
-        // Sinkronisasi fasilitas
+        
         $kategori->fasilitas()->sync($request->fasilitas);
         return redirect('/kategori/admin')->with('toast_success', 'Barang Berhasil diubah!');
     }
@@ -217,7 +214,7 @@ class AdminController extends Controller
     {
         // Validasi input
         $request->validate([
-            'gambar.*' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048', // Pastikan gambar dengan ukuran maksimal 2MB
+            'gambar.*' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048', //  ukuran maksimal 2MB
         ]);
         $kategori = Kategori::findOrFail($id);
 
@@ -281,32 +278,39 @@ class AdminController extends Controller
     }
     public function updateBooking(Request $request)
     {
-        DB::table('pemesanan')->where('id', $request->id)->update([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'jumlah_orang' => $request->jumlah_orang,
-            'in' => $request->Checkin,
-            'out' => $request->Checkout,
-            'tgl_pemesanan' => $request->tgl_pemesanan,
-            'harga' => $request->harga,
-            'total' => $request->total,
-            'kamar_id' => $request->kamar_id,
-            'status' => $request->status,
-        ]);
-        return redirect('/booking/admin')->with('toast_success', 'Berhasil Update!');
+        $pemesanan = Pemesanan::find($request->id);
+
+        if ($pemesanan) {
+            $pemesanan->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'jumlah_orang' => $request->jumlah_orang,
+                'in' => $request->Checkin,
+                'out' => $request->Checkout,
+                'tgl_pemesanan' => $request->tgl_pemesanan,
+                'harga' => $request->harga,
+                'total' => $request->total,
+                'kamar_id' => $request->kamar_id,
+                'status' => $request->status,
+            ]);
+    
+            return redirect('/booking/admin')->with('toast_success', 'Berhasil Update!');
+        } else {
+            return redirect('/booking/admin')->with('toast_error', 'Pemesanan tidak ditemukan!');
+        }
     }
     public function hapusBooking($id)
     {
         // DB::table('pemesanan')->where('id', $id)->delete();
         $pemesanan = Pemesanan::with('kamar', 'kategori')->where('id', $id)->first();
 
-        // Pastikan pemesanan ditemukan
+        
         if (!$pemesanan) {
             return redirect('/booking/admin')->with('error', 'Pemesanan tidak ditemukan!');
         }
 
-        // Simpan data pemesanan ke dalam tabel riwayat
+        // Simpan data pemesanan ke dalam tabel riwayat dengan query builder
         DB::table('riwayat_pemesanan')->insert([
             'nama_kamar' => $pemesanan->kamar->nama,
             'kode' => $pemesanan->kode,
@@ -320,7 +324,6 @@ class AdminController extends Controller
             'jumlah_orang' => $pemesanan->jumlah_orang,
             'status' => 'selesai',
             'total' => $pemesanan->total,
-            // tambahkan kolom lain yang relevan
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -51,7 +51,7 @@ class PesananController extends Controller
             return back()->withErrors(['jumlah_orang' => 'Jumlah orang maksimal pada kamar ini adalah '. $kamar->kapasitas])->withInput();
         }
     
-        // Menyimpan data pemesanan
+        // Menyimpan data pemesanan dengan eloquent
         $pemesanan = new Pemesanan();
         $pemesanan->kategori_id = $data->id;
         $pemesanan->kamar_id = $request->kamar_id;

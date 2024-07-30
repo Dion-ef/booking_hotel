@@ -802,7 +802,8 @@ textarea.form-control {
   border-radius: 50%;
   -webkit-animation: 1.6s ease infinite wheel-up-down;
   -moz-animation: 1.6s ease infinite wheel-up-down;
-  animation: 1.6s ease infinite wheel-up-down; }
+  animation: 1.6s ease infinite wheel-up-down; 
+}
 
 @-webkit-keyframes wheel-up-down {
   0% {
@@ -1298,6 +1299,10 @@ textarea.form-control {
     .fixed-height-img-pemesanan {
       height: 16rem; /* Atur ketinggian sesuai kebutuhan Anda */
       object-fit: cover; /* Pastikan gambar tetap proporsional */
+  }
+  .modal-img{
+    height: 200px;
+    width: 100%;
   }
   .pemesanan-container{
     position: relative;

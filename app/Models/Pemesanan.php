@@ -10,9 +10,9 @@ class Pemesanan extends Model
     use HasFactory;
     protected $table ="pemesanan";
     protected $guarded=[];
-    //protected $fillable = [
-      //  'users_id','tanggal','status','harga',
-    //];
+    protected $fillable = [
+        'nama', 'email', 'phone', 'jumlah_orang', 'in', 'out', 'tgl_pemesanan', 'harga', 'total', 'kamar_id', 'status',
+    ];
 
     public function kamar()
     {

@@ -12506,7 +12506,14 @@ fieldset:disabled .btn {
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
+.nav-item .nav-link.active {
+  background-color: #007bff; /* Warna background untuk item aktif */
+  color: #fff; /* Warna teks untuk item aktif */
+}
 
+.nav-item .nav-link.active i {
+  color: #fff; /* Warna ikon untuk item aktif */
+}
 @media (prefers-reduced-motion: reduce) {
   .nav-link {
     transition: none;
@@ -12605,6 +12612,37 @@ fieldset:disabled .btn {
   justify-content: space-between;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+.mouse-admin {
+  width: 100px;
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  bottom: 140px;
+  z-index: 1;
+  -webkit-transform: translateX(-10%);
+  -ms-transform: translateX(-10%);
+  transform: translateX(-10%); }
+
+.mouse-icon-admin {
+  width: 25px;
+  height: 45px;
+  border: 2px solid white;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  text-align: center; }
+
+.mouse-wheel-admin {
+  height: 6px;
+  margin: 2px auto 0;
+  display: block;
+  width: 3px;
+  background-color: white;
+  border-radius: 50%;
+  -webkit-animation: 1.6s ease infinite wheel-up-down;
+  -moz-animation: 1.6s ease infinite wheel-up-down;
+  animation: 1.6s ease infinite wheel-up-down; 
 }
 
 .navbar > .container,
@@ -21830,7 +21868,11 @@ dl li {
   transition-property: color;
   -webkit-transition-property: color;
 }
-
+/* active */
+.sidebar .nav .nav-item .nav-link.active {
+    background-color: #183188; 
+    color: #fff; 
+}
 .sidebar .nav .nav-item .nav-link i {
   color: inherit;
 }
@@ -21891,10 +21933,11 @@ dl li {
   transform: rotate(90deg);
 }
 
-.sidebar .nav .nav-item.active > .nav-link {
+/* agar semua nav-link dapat active */
+/* .sidebar .nav .nav-item.active > .nav-link {
   background: #183188;
   position: relative;
-}
+} */
 
 .sidebar .nav .nav-item.active > .nav-link i,
 .sidebar .nav .nav-item.active > .nav-link .menu-title,

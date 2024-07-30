@@ -78,7 +78,7 @@ class LoginController extends Controller
 
             if(Auth::guard('admin')->attempt($infologin)){
                 $user = Auth::guard('admin')->user();
-
+                
                 if ($user->role === 'admin') {
                     return redirect('/dashboard/admin');
                 } elseif ($user->role === 'resepsionis') {
@@ -93,6 +93,7 @@ class LoginController extends Controller
         
     }
     public function registerStore(Request $request){
+        //dengan query builder
         DB::table('users')->insert([
             'name'=>$request->name,
             'email'=>$request->email,

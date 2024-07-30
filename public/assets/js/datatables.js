@@ -198,3 +198,106 @@ $(document).ready(function() {
 
 });
 
+
+//resepsionis
+
+// Kamar
+$(document).ready(function() {
+    var ajaxUrl = $('#resepsionis-kamar').data('url');
+    console.log('AJAX URL: ', ajaxUrl);
+
+    var table = $('#resepsionis-kamar').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: ajaxUrl,
+        pageLength: 10, // Atur jumlah data per halaman
+        lengthMenu: [5, 10, 25, 50, 100],
+        columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'nama',
+                name: 'nama'
+            },
+            {
+                data: 'kategori.nama',
+                name: 'kategori.nama'
+            },
+            {
+                data: 'kategori.harga',
+                name: 'kategori.harga',
+                render: $.fn.dataTable.render.number(',', '.', 2, 'Rp.')
+            },
+            {
+                data: 'kapasitas',
+                name: 'kapasitas'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+
+
+});
+
+// booking
+$(document).ready(function() {
+    var ajaxUrl = $('#resepsionis-booking').data('url');
+    console.log('AJAX URL: ', ajaxUrl);
+
+    var table = $('#resepsionis-booking').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: ajaxUrl,
+        pageLength: 5, // Atur jumlah data per halaman
+        lengthMenu: [5, 10, 25, 50, 100],
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'kode', name: 'kode' },
+            { data: 'kamar.nama', name: 'kamar.nama' },
+            { data: 'nama', name: 'nama' },
+            { data: 'in', name: 'in' },
+            { data: 'out', name: 'out' },
+            { data: 'jumlah_orang', name: 'jumlah_orang' },
+            { data: 'total', name: 'total', render: $.fn.dataTable.render.number(',', '.', 2, 'Rp.') },
+            { data: 'status', name: 'status' },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+        ]
+    });
+
+});
+
+// riwayat
+$(document).ready(function() {
+    var ajaxUrl = $('#resepsionis-riwayat').data('url');
+    console.log('AJAX URL: ', ajaxUrl);
+    var table = $('#resepsionis-riwayat').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: ajaxUrl,
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'kode', name: 'kode' },
+            { data: 'nama_kamar', name: 'nama_kamar' },
+            { data: 'nama', name: 'nama' },
+            { data: 'phone', name: 'phone' },
+            { data: 'tanggal_pemesanan', name: 'tanggal_pemesanan' },
+            { data: 'total', name: 'total', render: $.fn.dataTable.render.number(',', '.', 2, 'Rp.') },
+            { data: 'status', name: 'status', render: function(data, type, row) {
+                return '<span class="text-danger">' + data + '</span>';
+            }},
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+        ]
+    });
+});

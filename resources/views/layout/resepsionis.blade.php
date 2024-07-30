@@ -15,6 +15,8 @@
 
     <!-- inject:css -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}">
+
 
     <!-- endinject -->
     <link rel="shortcut icon" href="images/favicon.png" />
@@ -43,8 +45,8 @@
                         <p>Navigation</p>
                         <span></span>
                     </li>
-                    <li class="nav-item {{ Request::is('/dashboard/admin') ? 'active' : '' }}">
-                        <a class="nav-link {{ Request::is('/dashboard/admin') ? 'active' : '' }}" href="/dashboard/admin">
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('/dashboard/resepsionis') ? 'active' : '' }}" href="/dashboard/resepsionis">
                             <i class="mdi mdi-view-quilt menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -54,21 +56,9 @@
                         <span></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/kamar/admin') ? 'active' : '' }}" href="/kamar/admin">
+                        <a class="nav-link {{ Request::is('/resepsionis/kamar') ? 'active' : '' }}" href="/resepsionis/kamar">
                             <i class="mdi mdi-bank menu-icon"></i>
                             <span class="menu-title">Kamar</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/kategori/admin') ? 'active' : '' }}" href="/kategori/admin">
-                            <i class="mdi mdi-view-headline menu-icon"></i>
-                            <span class="menu-title">Kategori</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/fasilitas/admin') ? 'active' : '' }}" href="/fasilitas/admin">
-                            <i class="mdi mdi-chart-pie menu-icon"></i>
-                            <span class="menu-title">Fasilitas</span>
                         </a>
                     </li>
                     <li class="nav-item sidebar-category">
@@ -76,13 +66,13 @@
                         <span></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/booking/admin') ? 'active' : '' }}" href="/booking/admin">
+                        <a class="nav-link {{ Request::is('/resepsionis/booking') ? 'active' : '' }}" href="/resepsionis/booking">
                             <i class="mdi mdi-grid-large menu-icon"></i>
                             <span class="menu-title">Booking</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/riwayat/admin') ? 'active' : '' }}" href="/riwayat/admin">
+                        <a class="nav-link {{ Request::is('/resepsionis/riwayat') ? 'active' : '' }}" href="/resepsionis/riwayat">
                             <i class="mdi mdi-archive menu-icon"></i>
                             <span class="menu-title">Riwayat</span>
                         </a>
@@ -114,7 +104,8 @@
 
                         </div>
 
-                        <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1 m-3">Welcome back, {{ Auth::user()->name }}</h4>
+                        <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1 m-3">Welcome back, {{ Auth::guard('admin')->user()->name }}</h4>
+
 
                         <!-- <a class="mouse-admin smoothscroll">
                             <div class="mouse-icon-admin">
@@ -189,53 +180,42 @@
                         </ul>
                         <ul class="navbar-nav navbar-nav-right">
                             <li class="nav-item nav-profile dropdown">
+
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
                                     <!-- <img src="images/faces/face5.jpg" alt="profile" /> -->
-                                    <span class="nav-profile-name">{{ Auth::user()->name }}</span>
+                                    <span class="nav-profile-name">{{ Auth::guard('admin')->user()->name }}</span>
                                 </a>
+
                                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <!-- <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                         <i class="mdi mdi-settings text-primary"></i>
                                         Update Profil
-                                    </a>
+                                    </a> -->
                                     <a class="dropdown-item" href="/logout">
                                         <i class="mdi mdi-logout text-primary"></i>
                                         Logout
                                     </a>
                                 </div>
-                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profil</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form role="form" method="POST" action="/update/profil">
-                                                    @csrf
-                                                    <!-- <div class="card p-img" style="width: 200px; height: 200px;">
-                                                        <a href="javascript:void(0);" onclick="document.getElementById('fileInput').click();">
-                                                            <img src="{{asset('assets/css/images/person_1.jpg')}}" class="card-img-top p-img" alt="dashboard">
-                                                        </a>
-                                                        <input type="file" id="fileInput" style="display:none;" onchange="handleFileSelect(event)">
-                                                    </div> -->
-                                                    <div class="form">
-                                                        <label for="name" class="form-label fw-bold">Nama</label>
-                                                        <input type="name" name="name" class="form-control" value="{{ Auth::user()->name }}">
-                                                        <label for="email" class="form-label fw-bold">Email</label>
-                                                        <input type="email" name="email" class="form-control" value="{{ Auth::user()->email }}">
-                                                    </div>
 
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keluar</button>
-                                                        <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
-                                                    </div>
-                                                </form>
-                                            </div>
 
-                                        </div>
-                                    </div>
-                                </div>
+
+
+
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link icon-link">
+                                    <i class="mdi mdi-plus-circle-outline"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link icon-link">
+                                    <i class="mdi mdi-web"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link icon-link">
+                                    <i class="mdi mdi-clock-outline"></i>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -270,6 +250,9 @@
     <script src="{{asset('assets/admin/js/master/hoverable-collapse.js')}}"></script>
     <script src="{{asset('assets/admin/js/master/template.js')}}"></script>
     <script src="{{asset('assets/admin/js/master/dashboard.js')}}"></script>
+    <script src="{{asset('assets/js/owl.carousel.min.js')}}"></script>
+
+
     <!-- End custom js for this page-->
     <script src="{{ mix('js/app.js') }}"></script>
 
