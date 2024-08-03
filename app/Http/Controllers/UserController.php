@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Fasilitas;
 use App\Models\Gambar;
 use App\Models\Kamar;
@@ -21,11 +22,12 @@ class UserController extends Controller
         $login = User::where('id', $user)->get();
         $kategori = Kategori::all();
         $getgambar = DB::table('gambar')->limit(7)->get();
+        $asset = Asset::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.index', compact('login', 'kategori', 'gambar', 'getgambar'));
+        return view('user.index', compact('login', 'kategori', 'gambar', 'getgambar','asset'));
     }
 
     public function room()
@@ -33,31 +35,31 @@ class UserController extends Controller
         $user = auth()->id();
         $login = User::where('id', $user)->get();
         $kategori = Kategori::all();
+        $asset = Asset::all();
         $kamars = [];
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
             $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
         }
-        return view('user.room', compact('login', 'kategori', 'gambar', 'kamars'));
+        return view('user.room', compact('login', 'kategori', 'gambar', 'kamars','asset'));
     }
     public function tentang()
     {
         $getgambar = DB::table('gambar')->limit(7)->get();
-        return view('user.tentang' , compact('getgambar'));
+        $asset = Asset::all();
+        return view('user.tentang' , compact('getgambar','asset'));
     }
     public function kontak()
     {
-        return view('user.kontak');
-    }
-    public function reservasi()
-    {
-        return view('user.reservasi');
+        $asset = Asset::all();
+        return view('user.kontak',compact('asset'));
     }
     public function riwayat()
     {
         $data = Pemesanan::with('kategori')->with('kamar')->where('user_id', Auth::user()->id)->paginate(10);
-        return view('user.riwayat', compact('data'));
+        $asset = Asset::all();
+        return view('user.riwayat', compact('data','asset'));
     }
     public function pemesanan($id)
     {
@@ -66,12 +68,13 @@ class UserController extends Controller
         $kategori = Kategori::all();
         $fasilitas = Kategori::with('fasilitas')->get();
         $users = auth()->id();
+        $asset = Asset::all();
         $user = User::where('id', $users)->get();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.pemesanan',  compact('user', 'data', 'kamar', 'kategori', 'gambar','fasilitas'));
+        return view('user.pemesanan',  compact('user', 'data', 'kamar', 'kategori', 'gambar','fasilitas','asset'));
     }
     public function pemesananFromKamar($id)
     {
@@ -79,19 +82,21 @@ class UserController extends Controller
         $data = $kamar->first()->kategori;
         $kategori = Kategori::all();
         $users = auth()->id();
+        $asset = Asset::all();
         $user = User::where('id', $users)->get();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
 
-        return view('user.pemesanan', compact('data', 'kamar', 'user', 'gambar'));
+        return view('user.pemesanan', compact('data', 'kamar', 'user', 'gambar','asset'));
     }
 
     public function cekKetersediaan(Request $request)
     {
 
 
+        $asset = Asset::all();
         $checkinDate = Carbon::parse($request->checkin_date);
         $checkoutDate = Carbon::parse($request->checkout_date);
         $jumlahOrang = $request->jumlah_orang;
@@ -115,9 +120,25 @@ class UserController extends Controller
             ->get();
 
         // Mengembalikan hasil ke view
-        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang'));
+        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang','asset'));
     }
 
+    public function detail($id){
+        $data = Kategori::where('id', $id)->first();
+        $kamar = Kamar::where('kategori_id', $data->id)->where('status', 'kosong')->get();
+        $kategori = Kategori::all();
+        $fasilitas = Kategori::with('fasilitas')->get();
+        $users = auth()->id();
+        $asset = Asset::all();
+        $user = User::where('id', $users)->get();
+        $gambar = [];
+        $kamars = [];
+        foreach ($kategori as $kat) {
+            $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
+            $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
+        }
+        return view('user.detail',compact('user', 'data', 'kamar', 'kategori', 'gambar','fasilitas','kamars','asset'));
+    }
 
 
 
@@ -128,32 +149,32 @@ class UserController extends Controller
     {
         $kategori = Kategori::all();
         $getgambar = DB::table('gambar')->limit(7)->get();
+        $asset = Asset::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.index', compact('kategori', 'gambar', 'getgambar'));
+        return view('user.index', compact('kategori', 'gambar', 'getgambar','asset'));
     }
     public function roomGuest()
     {
         $kategori = Kategori::all();
+        $asset = Asset::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.room', compact('kategori', 'gambar'));
+        return view('user.room', compact('kategori', 'gambar','asset'));
     }
     public function tentangGuest()
     {
+        $asset = Asset::all();
         $getgambar = DB::table('gambar')->limit(7)->get();
-        return view('user.tentang', compact('getgambar'));
+        return view('user.tentang', compact('getgambar','asset'));
     }
     public function kontakGuest()
     {
-        return view('user.kontak');
-    }
-    public function reservasiGuest()
-    {
-        return view('user.reservasi');
+        $asset = Asset::all();
+        return view('user.kontak', compact('asset'));
     }
 }

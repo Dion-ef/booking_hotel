@@ -2,6 +2,7 @@
 
 @section('link')
 <link href="{{asset('assets/admin/css/styleku.css')}}" rel="stylesheet">
+
 @endSection
 @section('konten')
 <!-- <div class="data">
@@ -57,17 +58,34 @@
 
 <div class="chart">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             <div id="chartData" data-months="{{ json_encode($months) }}" data-bookings="{{ $bookingsJson }}">
             </div>
 
             <div class="chart-container">
+                <h6>total booking perbulan</h6>
                 <canvas id="booking-chart" width="400" height="200"></canvas>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             <div class="chart-container">
-                <canvas id="balance-chart" data-bookings="{{ $bookingsJson }}"></canvas>
+                <canvas id="riwayat-chart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="chart-container">
+                        <h6>jumlah user yang login</h6>
+                        <canvas id="user-aktifitas"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-container">
+                        <h6></h6>
+                        <canvas id="user-aktifitas"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -75,5 +93,6 @@
 </div>
 @endSection
 @section('script')
+
 <script src="{{asset('assets/js/chartku.js')}}"></script>
 @endSection

@@ -27,7 +27,9 @@
     <header class="site-header js-site-header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">Pama Hotel</a></div>
+                @foreach($asset as $item)
+                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
+                @endforeach
                 <div class="col-6 col-lg-8">
 
 
@@ -50,7 +52,6 @@
                                             <li class="active"><a href="/room">Room</a></li>
                                             <li><a href="/tentang">Tentang</a></li>
                                             <li><a href="/kontak">Kontak</a></li>
-                                            <li><a href="/reservasi">Reservasi</a></li>
                                             @endguest
                                             @auth
                                             <li class=""><a href="/logout">Logout</a></li>
@@ -58,7 +59,6 @@
                                             <li class="active"><a href="/user/room">Room</a></li>
                                             <li><a href="/user/tentang">Tentang</a></li>
                                             <li><a href="/user/kontak">Kontak</a></li>
-                                            <li><a href="/user/reservasi">Reservasi</a></li>
                                             <li><a href="/user/riwayat">Riwayat</a></li>
                                             @endauth
                                         </ul>
@@ -73,7 +73,7 @@
     </header>
     <!-- END head -->
 
-    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5">
+    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5" style="background-image: url('{{ asset('storage/' . $item->background_img) }}');">
         <div class="container">
             <div class="row site-hero-inner justify-content-center align-items-center">
                 <div class="col-md-10 text-center" data-aos="fade">
@@ -102,18 +102,22 @@
                     <form action="{{ route('cek-ketersediaan') }}" method="GET">
                         @csrf
                         <div class="row">
+                            <?php
+                            $today = date('d-m-Y');
+                            ?>
                             <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
                                 <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
                                 <div class="field-icon-wrap">
                                     <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkin_date" name="checkin_date" class="form-control" required>
+
+                                    <input type="text" id="checkin_date" name="checkin_date" class="form-control" required value="<?php echo $today; ?>">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
                                 <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
                                 <div class="field-icon-wrap">
                                     <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkout_date" name="checkout_date" class="form-control" required>
+                                    <input type="text" id="checkout_date" name="checkout_date" class="form-control" required value="<?php echo $today; ?>">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
@@ -150,7 +154,9 @@
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-md-7">
                     <h2 class="heading" data-aos="fade-up">Rooms</h2>
-                    <p data-aos="fade-up" data-aos-delay="100">Selamat datang di Pama Hotel! Terletak di lokasi yang menakjubkan, jauh dari hiruk-pikuk kota, kami menawarkan pengalaman menginap yang tenang dan menyenangkan. Nikmati kenyamanan dan keindahan alam yang menyatu di Pama Hotel, tempat di mana kemewahan bertemu dengan ketenangan. Dengan fasilitas modern dan layanan prima, kami siap menyambut Anda untuk sebuah pengalaman menginap yang tak terlupakan. Jelajahi keindahan alam sekitar dan nikmati pelayanan terbaik hanya di Pama Hotel!.</p>
+                    @foreach($asset as $item)
+                    <p data-aos="fade-up" data-aos-delay="100">{{$item->deskripsi}}</p>
+                    @endforeach
                 </div>
             </div>
 
@@ -190,7 +196,9 @@
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-md-7">
                     <h2 class="heading" data-aos="fade-up">Rooms</h2>
-                    <p data-aos="fade-up" data-aos-delay="100">Selamat datang di Pama Hotel! Terletak di lokasi yang menakjubkan, jauh dari hiruk-pikuk kota, kami menawarkan pengalaman menginap yang tenang dan menyenangkan. Nikmati kenyamanan dan keindahan alam yang menyatu di Pama Hotel, tempat di mana kemewahan bertemu dengan ketenangan. Dengan fasilitas modern dan layanan prima, kami siap menyambut Anda untuk sebuah pengalaman menginap yang tak terlupakan. Jelajahi keindahan alam sekitar dan nikmati pelayanan terbaik hanya di Pama Hotel!.</p>
+                    @foreach($asset as $item)
+                    <p data-aos="fade-up" data-aos-delay="100">{{$item->deskripsi}}</p>
+                    @endforeach
                 </div>
             </div>
 
@@ -215,9 +223,9 @@
                             <div class="kamar-container">
                                 @foreach ($kamars[$m->id] as $kamar)
                                 <div class="kamar-card">
-                                <p class="text-center">{{ $kamar->nama }}</p>
+                                    <p class="text-center">{{ $kamar->nama }}</p>
                                 </div>
-                                
+
                                 @endforeach
                             </div>
                             @else
@@ -244,7 +252,7 @@
 
 
 
-
+    <!-- 
     <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
         <div class="container">
             <div class="row align-items-center">
@@ -256,7 +264,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <footer class="section footer-section">
         <div class="container">
@@ -266,14 +274,15 @@
                         <li><a href="/user/room">The Rooms &amp; Suites</a></li>
                         <li><a href="/user/tentang">About Us</a></li>
                         <li><a href="/user/kontak">Contact Us</a></li>
-                        <li><a href="/user/reservasi">Reservation</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-5 pr-md-5 contact-info">
+                    @foreach($asset as $item)
                     <!-- <li>198 West 21th Street, <br> Suite 721 New York NY 10016</li> -->
-                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> 198 West 21th Street, <br> Suite 721 New York NY 10016</span></p>
-                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> (+1) 435 3533</span></p>
-                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> info@domain.com</span></p>
+                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> {{$item->alamat}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> {{$item->phone}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> {{$item->email}}</span></p>
+                    @endforeach
                 </div>
             </div>
             <div class="row pt-5">

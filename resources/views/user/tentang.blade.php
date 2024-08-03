@@ -27,7 +27,9 @@
     <header class="site-header js-site-header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">Pama Hotel</a></div>
+                @foreach($asset as $item)
+                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
+                @endforeach
                 <div class="col-6 col-lg-8">
 
                     <!-- <button class="btn-login">Login</button> -->
@@ -45,13 +47,12 @@
                                 <div class="row full-height align-items-center">
                                     <div class="col-md-6 mx-auto">
                                         <ul class="list-unstyled menu">
-                                        @guest
+                                            @guest
                                             <li class=""><a href="/login">Login</a></li>
                                             <li><a href="/index">Home</a></li>
                                             <li><a href="/room">Room</a></li>
                                             <li class="active"><a href="/tentang">Tentang</a></li>
                                             <li><a href="/kontak">Kontak</a></li>
-                                            <li><a href="/reservasi">Reservasi</a></li>
                                             @endguest
                                             @auth
                                             <li class=""><a href="/logout">Logout</a></li>
@@ -59,7 +60,6 @@
                                             <li><a href="/user/room">Room</a></li>
                                             <li class="active"><a href="/user/tentang">Tentang</a></li>
                                             <li><a href="/user/kontak">Kontak</a></li>
-                                            <li><a href="/user/reservasi">Reservasi</a></li>
                                             <li><a href="/user/riwayat">Riwayat</a></li>
                                             @endauth
                                         </ul>
@@ -74,7 +74,7 @@
     </header>
 
 
-    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5">
+    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5" style="background-image: url('{{ asset('storage/' . $item->background_img) }}');">
         <div class="container">
             <div class="row site-hero-inner justify-content-center align-items-center">
                 <div class="col-md-10 text-center" data-aos="fade">
@@ -99,14 +99,18 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-12 col-lg-7 ml-auto order-lg-2 position-relative mb-5" data-aos="fade-up">
-                    <figure class="img-absolute">
+                    <!-- <figure class="img-absolute">
                         <img src="{{asset('assets/css/images/image_6.jpg')}}" alt="Image" class="img-fluid">
-                    </figure>
-                    <img src="{{asset('assets/css/images/img_1.jpg')}}" alt="Image" class="img-fluid rounded">
+                    </figure> -->
+                    @foreach($asset as $item)
+                    <img src="{{ asset('storage/' . $item->welcome_img) }}" alt="Image" class="img-fluid rounded">
+                    @endforeach
                 </div>
                 <div class="col-md-12 col-lg-4 order-lg-1" data-aos="fade-up">
                     <h2 class="heading">Welcome!</h2>
-                    <p class="mb-4">Selamat datang di Pama Hotel! Terletak di lokasi yang menakjubkan, jauh dari hiruk-pikuk kota, kami menawarkan pengalaman menginap yang tenang dan menyenangkan. Nikmati kenyamanan dan keindahan alam yang menyatu di Pama Hotel, tempat di mana kemewahan bertemu dengan ketenangan. Dengan fasilitas modern dan layanan prima, kami siap menyambut Anda untuk sebuah pengalaman menginap yang tak terlupakan. Jelajahi keindahan alam sekitar dan nikmati pelayanan terbaik hanya di Pama Hotel!.</p>
+                    @foreach($asset as $item)
+                    <p class="mb-4 text-justify">{{$item->deskripsi}}</p>
+                    @endforeach
 
                 </div>
 
@@ -226,7 +230,7 @@
 
 
 
-    <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
+    <!-- <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 text-center mb-4 mb-md-0 text-md-left" data-aos="fade-up">
@@ -237,7 +241,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <footer class="section footer-section">
         <div class="container">
@@ -247,14 +251,15 @@
                         <li><a href="/user/room">The Rooms &amp; Suites</a></li>
                         <li><a href="/user/tentang">About Us</a></li>
                         <li><a href="/user/kontak">Contact Us</a></li>
-                        <li><a href="/user/reservasi">Reservation</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-5 pr-md-5 contact-info">
+                    @foreach($asset as $item)
                     <!-- <li>198 West 21th Street, <br> Suite 721 New York NY 10016</li> -->
-                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> 198 West 21th Street, <br> Suite 721 New York NY 10016</span></p>
-                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> (+1) 435 3533</span></p>
-                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> info@domain.com</span></p>
+                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> {{$item->alamat}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> {{$item->phone}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> {{$item->email}}</span></p>
+                    @endforeach
                 </div>
             </div>
             <div class="row pt-5">

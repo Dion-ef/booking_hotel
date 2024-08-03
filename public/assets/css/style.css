@@ -5,7 +5,11 @@ body {
   font-size: 16px;
   line-height: 1.8;
   color: #6c757d;
-  position: relative; }
+  position: relative;
+  scroll-behavior: smooth;
+  transition: scroll-behavior 3s ease;
+}
+
 
 ::-moz-selection {
   color: #fff;
@@ -182,10 +186,13 @@ textarea.form-control {
   height: 100vh;
   min-height: 700px; }
 
+.bg-img{
+  background-image: url('../storage/{{ $item->backgorund_img }}');
+}
 .site-hero {
   background-size: cover;
   height: 100vh;
-  background-image: url(images/hero_4.jpg);
+  /* background-image: url(images/hero_4.jpg); */
   background-repeat: no-repeat;
   min-height: 700px;
   width: 100%;
@@ -945,10 +952,11 @@ textarea.form-control {
   -moz-perspective: 1000;
   -ms-perspective: 1000;
   perspective: 1000;
-  -ms-transform: perspective(1000px);
+  /* -ms-transform: perspective(1000px);
   -moz-transform: perspective(1000px);
   -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d; }
+  -ms-transform-style: preserve-3d;  */
+}
   .block-2:hover .back, .block-2.hover .back {
     -webkit-transform: rotateY(0deg);
     -moz-transform: rotateY(0deg);
@@ -968,7 +976,7 @@ textarea.form-control {
     -webkit-transform-style: preserve-3d;
     -ms-transition: 0.6s;
     -moz-transition: 0.6s;
-    -moz-transform: perspective(1000px);
+    /* -moz-transform: perspective(1000px); */
     -moz-transform-style: preserve-3d;
     -ms-transform-style: preserve-3d;
     -o-transition: 0.6s;
@@ -1000,8 +1008,8 @@ textarea.form-control {
     top: 0;
     left: 0; }
   .block-2 .front {
-    -webkit-transform: rotateY(0deg);
-    -ms-transform: rotateY(0deg);
+    /* -webkit-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg); */
     background: lightgreen;
     z-index: 2;
     background-size: cover;
@@ -1251,10 +1259,10 @@ textarea.form-control {
     border: 2px solid #dee2e6;
     background: white; }
   .timeline-item:last-child {
-    -webkit-border-image: -webkit-gradient(linear, left top, left bottom, color-stop(60%, #dee2e6), to(rgba(222, 226, 230, 0))) 1 100%;
+    -webkit-border-image: linear-gradient(to bottom, rgba(222, 226, 230, 1) 60%, rgba(222, 226, 230, 0) 100%);
     -webkit-border-image: -webkit-linear-gradient(top, #dee2e6 60%, rgba(222, 226, 230, 0)) 1 100%;
     -o-border-image: -o-linear-gradient(top, #dee2e6 60%, rgba(222, 226, 230, 0)) 1 100%;
-    border-image: -webkit-gradient(linear, left top, left bottom, color-stop(60%, #dee2e6), to(rgba(222, 226, 230, 0))) 1 100%;
+    border-image: linear-gradient(to bottom, rgba(222, 226, 230, 1) 60%, rgba(222, 226, 230, 0) 100%);
     border-image: linear-gradient(to bottom, #dee2e6 60%, rgba(222, 226, 230, 0)) 1 100%; }
 
 .custom-pagination {
@@ -1531,8 +1539,20 @@ textarea.form-control {
   text-decoration: none;
 }
 .kamar-card{
-  width: 50px;
-  height: 30px;
+  width: 65px;
+  height: 45px;
   border: .5px solid #878888b3;
   border-radius: 4px;
+}
+.kamar-card p{
+  align-items: center;
+  margin: auto;
+  font-size: 25px;
+  font-weight: 600;
+}
+.text-deskripsi-user{
+  font-size: 11px;
+  font-weight: 700;
+  color: #797575;
+ font-family: "Montserrat", sans-serif;
 }

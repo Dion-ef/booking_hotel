@@ -15,11 +15,11 @@ class PesananController extends Controller
 {
     public function checkIn(Request $request, $id)
     {
-        $data = Kategori::where('id', $id)->first();
-        if (!$data) {
-            return back()->withErrors('Kategori tidak ditemukan');
-        }
-    
+        //dd($request->all());
+        // $data = Kategori::where('id', $id)->first();
+        // if (!$data) {
+        //     return back()->withErrors(['kategori' => 'Kategori tidak ditemukan']);
+        // }
         // Mendapatkan tanggal saat ini
         $date = Carbon::now();
     
@@ -31,7 +31,7 @@ class PesananController extends Controller
             'Checkin' => 'required',
             'Checkout' => 'required',
             'jumlah_orang' => 'required|integer|min:1',
-            'kamar_id' => 'required|exists:kamar,id', // Pastikan kamar_id ada di tabel kamar
+            'kamar_id' => 'required|exists:kamar,id',
         ], [
             'required' => 'Kolom :attribute harus diisi.',
             'email' => 'Format email tidak valid.',
@@ -50,6 +50,9 @@ class PesananController extends Controller
         if ($request->jumlah_orang > $kamar->kapasitas) {
             return back()->withErrors(['jumlah_orang' => 'Jumlah orang maksimal pada kamar ini adalah '. $kamar->kapasitas])->withInput();
         }
+
+        $data = Kategori::where('id', $kamar->kategori_id)->first();
+
     
         // Menyimpan data pemesanan dengan eloquent
         $pemesanan = new Pemesanan();

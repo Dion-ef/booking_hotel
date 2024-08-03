@@ -14,7 +14,8 @@ class Kategori extends Model
     protected $guarded=[];
     protected $fillable = [
         'nama',
-        'harga'
+        'harga',
+        'deskripsi',
     ];
 
     public function kamars()

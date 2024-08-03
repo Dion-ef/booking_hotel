@@ -32,7 +32,9 @@
     <header class="site-header js-site-header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">Pama Hotel</a></div>
+                @foreach($asset as $item)
+                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
+                @endforeach
                 <div class="col-6 col-lg-8">
 
                     <!-- <button class="btn-login">Login</button> -->
@@ -56,7 +58,6 @@
                                             <li><a href="/room">Room</a></li>
                                             <li><a href="/tentang">Tentang</a></li>
                                             <li><a href="/kontak">Kontak</a></li>
-                                            <li><a href="/reservasi">Reservasi</a></li>
                                             @endguest
                                             @auth
                                             <li class=""><a href="/logout">Logout</a></li>
@@ -64,7 +65,6 @@
                                             <li><a href="/user/room">Room</a></li>
                                             <li><a href="/user/tentang">Tentang</a></li>
                                             <li><a href="/user/kontak">Kontak</a></li>
-                                            <li><a href="/user/reservasi">Reservasi</a></li>
                                             <li class="active"><a href="/user/riwayat">Riwayat</a></li>
                                             @endauth
                                         </ul>
@@ -80,7 +80,7 @@
     <!-- END head -->
 
 
-    <section class="site-hero overlay" data-stellar-background-ratio="0.5">
+    <section class="site-hero overlay" data-stellar-background-ratio="0.5" style="background-image: url('{{ asset('storage/' . $item->background_img) }}');">
         <div class="container">
             <div class="row site-hero-inner justify-content-center align-items-center">
                 <div class="col-md-10 text-center" data-aos="">
@@ -161,14 +161,15 @@
                         <li><a href="/user/room">The Rooms &amp; Suites</a></li>
                         <li><a href="/user/tentang">About Us</a></li>
                         <li><a href="/user/kontak">Contact Us</a></li>
-                        <li><a href="/user/reservasi">Reservation</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-5 pr-md-5 contact-info">
+                    @foreach($asset as $item)
                     <!-- <li>198 West 21th Street, <br> Suite 721 New York NY 10016</li> -->
-                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> 198 West 21th Street, <br> Suite 721 New York NY 10016</span></p>
-                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> (+1) 435 3533</span></p>
-                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> info@domain.com</span></p>
+                    <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> {{$item->alamat}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> {{$item->phone}}</span></p>
+                    <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> {{$item->email}}</span></p>
+                    @endforeach
                 </div>
             </div>
             <div class="row pt-5">

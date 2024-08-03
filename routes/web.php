@@ -27,7 +27,8 @@ Route::get('/index', [App\Http\Controllers\UserController::class, 'indexGuest'])
 Route::get('/room', [App\Http\Controllers\UserController::class, 'roomGuest'])->middleware('guest');
 Route::get('/tentang', [App\Http\Controllers\UserController::class, 'tentangGuest'])->middleware('guest');
 Route::get('/kontak', [App\Http\Controllers\UserController::class, 'kontakGuest'])->middleware('guest');
-Route::get('/reservasi', [App\Http\Controllers\UserController::class, 'reservasiGuest'])->middleware('guest');
+Route::get('/user/detail', [App\Http\Controllers\UserController::class, 'detail'])->middleware('guest');
+
 
 // login menggunakan google
 Route::get('/auth/google', [App\Http\Controllers\LoginController::class, 'redirect'])->name('google.redirect');
@@ -65,6 +66,17 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::post('/tambah/fasilitas', [App\Http\Controllers\AdminController::class, 'tambahFasilitas']);
     Route::post('/update/fasilitas', [App\Http\Controllers\AdminController::class, 'updateFasilitas']);
     Route::get('/hapus/fasilitas/{id}', [App\Http\Controllers\AdminController::class, 'hapusFasilitas']);
+    Route::get('/kelola/asset/admin', [App\Http\Controllers\AdminController::class, 'kelolaAsset'])->name('asset.admin');
+    Route::post('/tambah/asset', [App\Http\Controllers\AdminController::class, 'tambahAsset']);
+    Route::get('/asset/get', [App\Http\Controllers\AdminController::class, 'getAsset'])->name('admin.asset.data');
+    Route::post('/update/asset', [App\Http\Controllers\AdminController::class, 'updateAsset']);
+
+
+
+    // chart
+    Route::get('/chart/riwayat', [App\Http\Controllers\ChartController::class, 'chartRiwayat']);
+    Route::get('/chart/user', [App\Http\Controllers\ChartController::class, 'chartUserAktive']);
+
 });
 
 
@@ -74,13 +86,14 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::get('/user/room', [App\Http\Controllers\UserController::class, 'room'])->middleware('auth');
     Route::get('/user/tentang', [App\Http\Controllers\UserController::class, 'tentang'])->middleware('auth');
     Route::get('/user/kontak', [App\Http\Controllers\UserController::class, 'kontak'])->middleware('auth');
-    Route::get('/user/reservasi', [App\Http\Controllers\UserController::class, 'reservasi'])->middleware('auth');
     Route::get('/user/riwayat', [App\Http\Controllers\UserController::class, 'riwayat'])->middleware('auth');
     Route::get('/user/pemesanan/{id}', [App\Http\Controllers\UserController::class, 'pemesanan'])->middleware('auth')->name('user.pemesanan');
     Route::get('/user/pemesanan/kamar/{id}', [App\Http\Controllers\UserController::class, 'pemesananFromKamar'])->middleware('auth')->name('user.pemesananFromKamar');
     Route::post('/user/pesan/{id}', [App\Http\Controllers\PesananController::class, 'checkIn'])->middleware('auth');
     Route::get('/booking/konfirmasi/{id}', [App\Http\Controllers\PesananController::class, 'konfirmasi'])->middleware('auth')->name('booking.confirm');
     Route::get('/cek-ketersediaan', [UserController::class, 'cekKetersediaan'])->name('cek-ketersediaan');
+    Route::get('/user/detail/{id}', [App\Http\Controllers\UserController::class, 'detail'])->middleware('auth');
+
 });
 
 // Resepsionis

@@ -32,6 +32,7 @@
         <div class="rw p-0 m-0 proBanner " id="proBanner">
 
             <!-- partial:./partials/_sidebar.html -->
+             <!-- background berada di navbar -->
             <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
                 <!-- <div class="header-text">
                     <span>Pama Hotel</span>
@@ -87,6 +88,29 @@
                             <span class="menu-title">Riwayat</span>
                         </a>
                     </li>
+                    <li class="nav-item sidebar-category">
+                        <p>Manage</p>
+                        <span></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('/kelola/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
+                            <i class="mdi mdi-palette menu-icon"></i>
+                            <span class="menu-title">CMS</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                            <i class="mdi mdi-palette menu-icon"></i>
+                            <span class="menu-title">CMS</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="{{route('asset.admin')}}">Asset</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Leadership</a></li>
+                            </ul>
+                        </div>
+                    </li> -->
                     <li class="nav-item sidebar-category">
                         <p>Keluar</p>
                         <span></span>

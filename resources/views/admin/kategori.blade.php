@@ -21,6 +21,10 @@
                                 <input type="name" name="nama" class="form-control mb-3" required>
                                 <label for="status" class="form-label fw-bold">Harga</label>
                                 <input type="status" name="harga" class="form-control mb-3" required>
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label fw-bold">Deskripsi</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="deskripsi"></textarea>
+                                </div>
                                 <label for="fasilitas" class="form-label fw-bold">Fasilitas</label>
                                 <select name="fasilitas[]" class="selectpicker form-control" multiple data-live-search="true">
                                     @foreach ($fasilitas as $f)
@@ -107,6 +111,10 @@
                             <input type="nama" name="nama" class="form-control" value="{{$item->nama}}">
                             <label for="status" class="form-label fw-bold">Harga</label>
                             <input type="status" name="harga" class="form-control" value="{{$item->harga}}">
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label fw-bold">Deskripsi</label>
+                                <textarea class="form-control " id="exampleFormControlTextarea1" rows="3" name="deskripsi">{{ $item->deskripsi }}</textarea>
+                            </div>
                             <label for="edit-fasilitas" class="form-label fw-bold">Fasilitas</label>
                             <select name="fasilitas[]" class="selectpicker form-control" multiple data-live-search="true">
                                 <!-- Options will be dynamically loaded here -->

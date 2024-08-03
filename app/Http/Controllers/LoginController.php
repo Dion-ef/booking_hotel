@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use illuminate\Support\Str;
 
 class LoginController extends Controller
@@ -57,40 +58,50 @@ class LoginController extends Controller
     }
 
     function validasi(Request $request){
-        Session::flash('email',$request->email);
+        Session::flash('email', $request->email);
         $request->validate([
-            'email'=>'required',
-            'password'=>'required'
-        ],[
-            'email.required'=>'Email wajib diisi', //jika email tidak diisi maka akan tampil pesan tersebut
-            'password.required'=>'Password wajib diisi',
+            'email' => 'required',
+            'password' => 'required'
+        ], [
+            'email.required' => 'Email wajib diisi', // jika email tidak diisi maka akan tampil pesan tersebut
+            'password.required' => 'Password wajib diisi',
         ]);
-
-        $infologin = [ //variabel untuk menampung data email dan password yang diambil dari variabel request
-            'email'=>$request->email,
-            'password'=>$request->password,
+    
+        $infologin = [ // variabel untuk menampung data email dan password yang diambil dari variabel request
+            'email' => $request->email,
+            'password' => $request->password,
         ];
-            // if(Auth::guard('admin')->attempt($infologin)){
-            //     return redirect('/dashboard/admin');
-            // }elseif(Auth::guard('user')->attempt($infologin)){
-            //     return redirect('/user/index');
-            // }
-
-            if(Auth::guard('admin')->attempt($infologin)){
-                $user = Auth::guard('admin')->user();
-                
-                if ($user->role === 'admin') {
-                    return redirect('/dashboard/admin');
-                } elseif ($user->role === 'resepsionis') {
-                    return redirect('/dashboard/resepsionis');
-                }
-                
-            }elseif(Auth::guard('user')->attempt($infologin)){
-                return redirect('/user/index');
+    
+    
+        if (Auth::guard('admin')->attempt($infologin)) {
+            
+            $user = Auth::guard('admin')->user();
+    
+            if ($user->role === 'admin') {
+                return redirect('/dashboard/admin');
+            } elseif ($user->role === 'resepsionis') {
+                return redirect('/dashboard/resepsionis');
             }
+            
+        } elseif (Auth::guard('user')->attempt($infologin)) {
+            return redirect('/user/index');
+        }
+        // $admin = \App\Models\Admin::where('email', $request->email)->first();
+    
+        // if ($admin && Hash::check($request->password, $admin->password)) {
+        //     // Password matches
+        //     Auth::guard('admin')->login($admin);
+            
+        //     if ($admin->role === 'admin') {
+        //         return redirect('/dashboard/admin');
+        //     } elseif ($admin->role === 'resepsionis') {
+        //         return redirect('/dashboard/resepsionis');
+        //     }
+        // }
+    
+       
         
-            return redirect('/login')->withErrors('Email atau Password salah ')->withInput();
-        
+         return redirect('/login')->withErrors('Email atau Password salah ')->withInput();
     }
     public function registerStore(Request $request){
         //dengan query builder

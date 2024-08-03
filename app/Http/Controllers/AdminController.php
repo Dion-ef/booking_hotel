@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Asset;
 use App\Models\Fasilitas;
 use App\Models\Gambar;
 use App\Models\Kamar;
@@ -11,6 +12,7 @@ use App\Models\Pemesanan;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,27 +24,26 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $totalKamar = Kamar::count();
-        $bookings = Pemesanan::select(
+        $bookings = Riwayat::select(
             DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
             DB::raw('count(*) as count')
-        )
-        ->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))
-        ->get();
-    
+        )->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))->get();
+
         // Menyusun data dalam format yang sesuai untuk chart
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $bookingsData = array_fill(0, 12, 0);
-    
+
         foreach ($bookings as $booking) {
             $monthIndex = (int) date('n', strtotime($booking->month));
             $bookingsData[$monthIndex - 1] = $booking->count;
         }
-    
+
         // Konversi data menjadi JSON
         $bookingsJson = json_encode($bookingsData);
 
-        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson','months'));
+        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson', 'months'));
     }
+
     // update Profil
     public function profilUpdate(Request $request)
     {
@@ -66,7 +67,7 @@ class AdminController extends Controller
     public function getKamar(Request $request)
     {
         if ($request->ajax()) {
-            $data = Kamar::with('kategori')->select(['*']); // Ambil data kamar beserta kategori
+            $data = Kamar::with('kategori')->select(['*']); // Ambil data kamar beserta kategori, seslect * maka diambil semua
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
@@ -179,13 +180,15 @@ class AdminController extends Controller
         $request->validate([
             'nama' => 'required',
             'harga' => 'required|numeric',
-            'fasilitas' => 'required|array'
+            'fasilitas' => 'required|array',
+
         ]);
 
-        
+
         $kategori = Kategori::create([
             'nama' => $request->nama,
             'harga' => $request->harga,
+
         ]);
 
         // Menyimpan relasi fasilitas dengan kategori
@@ -204,9 +207,10 @@ class AdminController extends Controller
         $kategori = Kategori::find($request->id);
         $kategori->nama = $request->nama;
         $kategori->harga = $request->harga;
+        $kategori->deskripsi = $request->deskripsi;
         $kategori->save();
 
-        
+
         $kategori->fasilitas()->sync($request->fasilitas);
         return redirect('/kategori/admin')->with('toast_success', 'Barang Berhasil diubah!');
     }
@@ -274,7 +278,7 @@ class AdminController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
-            // i class="fa-solid fa-eye"></i> <i class="fa-solid fa-xmark"></i>
+        // i class="fa-solid fa-eye"></i> <i class="fa-solid fa-xmark"></i>
     }
     public function updateBooking(Request $request)
     {
@@ -294,7 +298,7 @@ class AdminController extends Controller
                 'kamar_id' => $request->kamar_id,
                 'status' => $request->status,
             ]);
-    
+
             return redirect('/booking/admin')->with('toast_success', 'Berhasil Update!');
         } else {
             return redirect('/booking/admin')->with('toast_error', 'Pemesanan tidak ditemukan!');
@@ -305,7 +309,7 @@ class AdminController extends Controller
         // DB::table('pemesanan')->where('id', $id)->delete();
         $pemesanan = Pemesanan::with('kamar', 'kategori')->where('id', $id)->first();
 
-        
+
         if (!$pemesanan) {
             return redirect('/booking/admin')->with('error', 'Pemesanan tidak ditemukan!');
         }
@@ -337,6 +341,8 @@ class AdminController extends Controller
         return redirect('/booking/admin')->with('info', 'Berhasil CheckOut!');
     }
 
+
+
     // Riwayat
     public function riwayat()
     {
@@ -359,7 +365,7 @@ class AdminController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
-            // <i class="fa-solid fa-pen-to-square"></i>
+        // <i class="fa-solid fa-pen-to-square"></i>
     }
 
 
@@ -467,5 +473,104 @@ class AdminController extends Controller
     //     return view('admin.riwayat', compact('data', 'riwayat'));
     // }
 
+    public function kelolaAsset()
+    {
+        $user = auth()->id();
+        $data = Admin::where('id', $user)->first();
+        $kategori = Kategori::all();
+        $asset = Asset::all();
+        return view('admin.kelola', compact('data', 'kategori', 'asset'));
+    }
 
+    public function tambahAsset(Request $request)
+    {
+
+        $request->validate([
+            'nama_hotel' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'alamat' => 'required|string',
+            'headline' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'background_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'welcome_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        // simpan dengan eloquent
+        $asset = new Asset();
+        $asset->nama_hotel = $request->input('nama_hotel');
+        $asset->email = $request->input('email');
+        $asset->phone = $request->input('phone');
+        $asset->alamat = $request->input('alamat');
+        $asset->headline = $request->input('headline');
+        $asset->deskripsi = $request->input('deskripsi');
+
+        if ($request->hasFile('background_img')) {
+            $backgroundImg = $request->file('background_img');
+            $backgroundPath = $backgroundImg->store('public/asset_image/background');
+            $asset->background_img = str_replace('public/', '', $backgroundPath);
+        }
+        if ($request->hasFile('welcome_img')) {
+            $welcomeImg = $request->file('welcome_img');
+            $welcomePath = $welcomeImg->store('public/asset_image/welcome_img');
+            $asset->welcome_img = str_replace('public/', '', $welcomePath);
+        }
+        $asset->save();
+
+        return redirect()->back()->with('success', 'Asset berhasil ditambahkan!');
+    }
+
+    public function getAsset(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Asset::all();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('background_img', function ($row) {
+                    return '<img src="' . asset('storage/' . $row->background_img) . '"  class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
+                })
+                ->addColumn('welcome_img', function ($row) {
+                    return '<img src="' . asset('storage/' . $row->welcome_img) . '" class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editAsset' . $row->id . '"> Edit</a>';
+                    $btn .= ' <a  class="btn btn-primary btn-sm btn-action mt-1" data-bs-toggle="modal" data-bs-target="#detailAsset' . $row->id . '"> Detail</a>';
+                    return $btn;
+                })
+                ->rawColumns(['background_img', 'welcome_img', 'action'])
+                ->make(true);
+        }
+    }
+
+    public function updateAsset(Request $request)
+    {
+        $asset = Asset::find($request->id);
+        $asset->nama_hotel = $request->nama_hotel;
+        $asset->email = $request->email;
+        $asset->phone = $request->phone;
+        $asset->alamat = $request->alamat;
+        $asset->headline = $request->input('headline');
+        $asset->deskripsi = $request->input('deskripsi');
+
+        if ($request->hasFile('background_img')) {
+            if ($asset->background_img) {
+                Storage::disk('public')->delete($asset->background_img);
+            }
+            $backgroundImg = $request->file('background_img');
+            $backgroundPath = $backgroundImg->store('public/asset_image/background');
+            $asset->background_img = str_replace('public/', '', $backgroundPath);
+        }
+        if ($request->hasFile('welcome_img')) {
+            if ($asset->welcome_img) {
+                Storage::disk('public')->delete($asset->welcome_img);
+            }
+            $welcomeImg = $request->file('welcome_img');
+            $welcomePath = $welcomeImg->store('public/asset_image/welcome_img');
+            $asset->welcome_img = str_replace('public/', '', $welcomePath);
+        }
+
+        $asset->save();
+
+
+        return redirect()->back()->with('success', 'Asset updated successfully.');
+    }
 }

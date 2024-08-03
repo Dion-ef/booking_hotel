@@ -86,28 +86,6 @@ $(document).ready(function() {
         ]
     });
 
-    // edit
-    $(document).on('click', '.edit-button', function () {
-        var id = $(this).data('id');
-        
-        // Ambil data untuk ID yang dipilih
-        $.ajax({
-            url: '/kategori/' + id, // Route untuk mendapatkan detail kategori
-            method: 'GET',
-            success: function (data) {
-                // Isi form modal dengan data
-                $('#edit-id').val(data.id);
-                $('#edit-nama').val(data.nama);
-                $('#edit-harga').val(data.harga);
-                
-                // Handle fasilitas
-                $('#edit-fasilitas').val(data.fasilitas_id); // Anda perlu memastikan data.fasilitas_ids berisi array ID fasilitas yang dipilih
-    
-                // Show the modal
-                $('#editKategori').modal('show');
-            }
-        });
-    });
     
 });
 
@@ -298,6 +276,28 @@ $(document).ready(function() {
                 return '<span class="text-danger">' + data + '</span>';
             }},
             { data: 'action', name: 'action', orderable: false, searchable: false },
+        ]
+    });
+});
+
+// asset
+$(document).ready(function() {
+    var ajaxUrl = $('#asset-table').data('url');
+    console.log('AJAX URL: ', ajaxUrl);
+    var table = $('#asset-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: ajaxUrl,
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'nama_hotel', name: 'nama_hotel' },
+            { data: 'email', name: 'email' },
+            { data: 'phone', name: 'phone' },
+            { data: 'alamat', name: 'alamat' },
+            { data: 'background_img', name: 'background_img', orderable: false, searchable: false },
+            { data: 'welcome_img', name: 'welcome_img', orderable: false, searchable: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+
         ]
     });
 });

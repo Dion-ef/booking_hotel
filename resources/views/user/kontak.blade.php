@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datepicker.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/jquery.timepicker.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/fancybox.min.css')}}">
-    
+
     <link rel="stylesheet" href="{{asset('fonts/ionicons/css/ionicons.min.css')}}">
     <link rel="stylesheet" href="{{asset('fonts/fontawesome/css/font-awesome.min.css')}}">
     <title>Pama Hotel</title>
@@ -27,12 +27,14 @@
     <header class="site-header js-site-header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">Pama Hotel</a></div>
+                @foreach($asset as $item)
+                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
+                @endforeach
                 <div class="col-6 col-lg-8">
 
                     <!-- <button class="btn-login">Login</button> -->
                     <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade">
-                    
+
                         <span></span>
                         <span></span>
                         <span></span>
@@ -45,13 +47,12 @@
                                 <div class="row full-height align-items-center">
                                     <div class="col-md-6 mx-auto">
                                         <ul class="list-unstyled menu">
-                                        @guest
+                                            @guest
                                             <li class=""><a href="/login">Login</a></li>
-                                            <li ><a href="/index">Home</a></li>
+                                            <li><a href="/index">Home</a></li>
                                             <li><a href="/room">Room</a></li>
                                             <li><a href="/tentang">Tentang</a></li>
                                             <li class="active"><a href="/kontak">Kontak</a></li>
-                                            <li><a href="/reservasi">Reservasi</a></li>
                                             @endguest
                                             @auth
                                             <li class=""><a href="/logout">Logout</a></li>
@@ -59,7 +60,6 @@
                                             <li><a href="/user/room">Room</a></li>
                                             <li><a href="/user/tentang">Tentang</a></li>
                                             <li class="active"><a href="/user/kontak">Kontak</a></li>
-                                            <li><a href="/user/reservasi">Reservasi</a></li>
                                             <li><a href="/user/riwayat">Riwayat</a></li>
                                             @endauth
                                         </ul>
@@ -74,7 +74,7 @@
     </header>
     <!-- END head -->
 
-    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5">
+    <section class="site-hero inner-page overlay" data-stellar-background-ratio="0.5" style="background-image: url('{{ asset('storage/' . $item->background_img) }}');">
         <div class="container">
             <div class="row site-hero-inner justify-content-center align-items-center">
                 <div class="col-md-10 text-center" data-aos="fade">
@@ -97,53 +97,55 @@
     <!-- END section -->
 
     <section class="section contact-section" id="next">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
-            
-            <form action="#" method="post" class="bg-white p-md-5 p-4 mb-5 border">
-              <div class="row">
-                <div class="col-md-6 form-group">
-                  <label for="name">Name</label>
-                  <input type="text" id="name" class="form-control ">
-                </div>
-                <div class="col-md-6 form-group">
-                  <label for="phone">Phone</label>
-                  <input type="text" id="phone" class="form-control ">
-                </div>
-              </div>
-          
-              <div class="row">
-                <div class="col-md-12 form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" class="form-control ">
-                </div>
-              </div>
-              <div class="row mb-4">
-                <div class="col-md-12 form-group">
-                  <label for="message">Write Message</label>
-                  <textarea name="message" id="message" class="form-control " cols="30" rows="8"></textarea>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 form-group">
-                  <input type="submit" value="Send Message" class="btn btn-primary text-white font-weight-bold">
-                </div>
-              </div>
-            </form>
-
-          </div>
-          <div class="col-md-5" data-aos="fade-up" data-aos-delay="200">
+        <div class="container">
             <div class="row">
-              <div class="col-md-10 ml-auto contact-info">
-                <p><span class="d-block">Address:</span> <span> Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan, <br>Kec.Tulungagung, Kabupaten Tulungagung</span></p>
-                <p><span class="d-block">Phone:</span> <span> (+1) 234 4567 8910</span></p>
-                <p><span class="d-block">Email:</span> <span> info@domain.com</span></p>
-              </div>
+                <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
+
+                    <form action="#" method="post" class="bg-white p-md-5 p-4 mb-5 border">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" class="form-control ">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" id="phone" class="form-control ">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control ">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12 form-group">
+                                <label for="message">Write Message</label>
+                                <textarea name="message" id="message" class="form-control " cols="30" rows="8"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <input type="submit" value="Send Message" class="btn btn-primary text-white font-weight-bold">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-md-5" data-aos="fade-up" data-aos-delay="200">
+                    <div class="row">
+                        <div class="col-md-10 ml-auto contact-info">
+                            @foreach($asset as $item)
+                            <p><span class="d-block">Address:</span> <span> {{$item->alamat}} </span></p>
+                            <p><span class="d-block">Phone:</span> <span> {{$item->phone}}</span></p>
+                            <p><span class="d-block">Email:</span> <span> {{$item->email}}</span></p>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
 
 
@@ -252,7 +254,6 @@
                         <li><a href="/user/room">The Rooms &amp; Suites</a></li>
                         <li><a href="/user/tentang">About Us</a></li>
                         <li><a href="/user/kontak">Contact Us</a></li>
-                        <li><a href="/user/reservasi">Reservation</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-5 pr-md-5 contact-info">
