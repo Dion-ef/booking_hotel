@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Asset;
 use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class ResepsionisController extends Controller
@@ -19,8 +21,28 @@ class ResepsionisController extends Controller
     public function index()
     {
         $user = auth()->id();
-        $data = Admin::where('id', $user)->get();
-        return view('resepsionis.dashboard', compact('data'));
+        $data = Admin::where('id', $user)->first();
+        $totalKamarKosong = Kamar::where('status','kosong')->count();
+        $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
+        $totalBooking = Riwayat::count();
+        $asset = Asset::all();
+        $bookings = Riwayat::select(
+            DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
+            DB::raw('count(*) as count')
+        )->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))->get();
+
+        // Menyusun data dalam format yang sesuai untuk chart
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $bookingsData = array_fill(0, 12, 0);
+
+        foreach ($bookings as $booking) {
+            $monthIndex = (int) date('n', strtotime($booking->month));
+            $bookingsData[$monthIndex - 1] = $booking->count;
+        }
+
+        // Konversi data menjadi JSON
+        $bookingsJson = json_encode($bookingsData);
+        return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai'));
     }
     public function profilUpdateResepsionis(Request $request)
     {
@@ -63,12 +85,13 @@ class ResepsionisController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::all();
+        $asset = Asset::all();
         $kamar = Kamar::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar'));
+        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar','asset'));
     }
     public function getKamarResepsionis(Request $request)
     {
@@ -91,9 +114,10 @@ class ResepsionisController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $kamar = Kamar::all();
+        $asset = Asset::all();
         $kategori = Kategori::all();
         $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
-        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori'));
+        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori','asset'));
     }
     public function getBookingResepsionis()
     {
@@ -105,7 +129,7 @@ class ResepsionisController extends Controller
                 return '
                 <a class="btn btn-primary btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
                 <br>
-                <a href="/checkout/booking/' . $row->id . '" class="btn btn-danger btn-sm btn-action mt-1"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
+                <a href="/checkout/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1"><i class="fa-solid fa-xmark" aria-hidden="true" data-id="' . $row->id . '"></i> Check Out</a>
             ';
             })
             ->rawColumns(['action'])
@@ -146,7 +170,9 @@ class ResepsionisController extends Controller
         DB::table('kamar')
             ->where('id', $pemesanan->kamar_id)
             ->update(['status' => 'kosong']);
-        return redirect('/resepsionis/booking')->with('info', 'Berhasil CheckOut!');
+        Alert::success('Checkout', 'Berhasil Checkout!');
+
+        return redirect('/resepsionis/booking');
     }
 
     // Riwayat  
@@ -154,7 +180,8 @@ class ResepsionisController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $riwayat = Riwayat::paginate(10);
-        return view('resepsionis.riwayat', compact('data', 'riwayat'));
+        $asset = Asset::all();
+        return view('resepsionis.riwayat', compact('data', 'riwayat','asset'));
     }
     public function getRiwayatResepsionis()
     {

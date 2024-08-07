@@ -11,7 +11,25 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Pama Hotel</title>
-    
+
+    <style>
+        @foreach($asset as $item)
+        .site-hero-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{{ asset('storage/' . $item->background_img) }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            filter: brightness(50%);
+            z-index: -1;
+        }
+        @endforeach
+    </style>
+
 </head>
 
 <body>
@@ -19,7 +37,9 @@
     <header class="site-header js-site-header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="index.html">Pama Hotel</a></div>
+                @foreach($asset as $item)
+                <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
+                @endforeach
                 <div class="col-6 col-lg-8">
 
                     <!-- <button class="btn-login">Login</button> -->
@@ -42,7 +62,6 @@
                                             <li><a href="/room">Room</a></li>
                                             <li><a href="/tentang">Tentang</a></li>
                                             <li><a href="/kontak">Kontak</a></li>
-                                            <li><a href="/reservasi">Reservasi</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -54,7 +73,8 @@
         </div>
     </header>
 
-    <div class="site-hero-ku" >
+
+    <div class="site-hero-login">
         <div class="container-login">
             <div class="row  justify-content-center align-items-center">
                 <div class="border border-register ">

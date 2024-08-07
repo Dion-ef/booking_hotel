@@ -202,10 +202,5 @@
 <!-- Bootstrap Select JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        $('.selectpicker').selectpicker();
-    });
-</script>
 
 @endSection

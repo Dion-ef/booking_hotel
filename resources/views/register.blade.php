@@ -11,6 +11,23 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Pama Hotel</title>
+    <style>
+        @foreach($asset as $item)
+        .site-hero-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{{ asset('storage/' . $item->background_img) }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            filter: brightness(50%);
+            z-index: -1;
+        }
+        @endforeach
+    </style>
 </head>
 
 <body>
@@ -41,7 +58,6 @@
                                             <li><a href="rooms.html">Room</a></li>
                                             <li><a href="about.html">Tentang</a></li>
                                             <li><a href="contact.html">Kontak</a></li>
-                                            <li><a href="reservation.html">Reservasi</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -53,7 +69,7 @@
         </div>
     </header>
 
-    <div class="site-hero-ku">
+    <div class="site-hero-login">
         <div class="container-login">
             <div class="row  justify-content-center align-items-center">
                 <div class="border border-register ">

@@ -10,20 +10,18 @@
             <thead>
                 <tr>
                     <th class="col-md-1 text-center">No</th>
-                    <th class="col-md-2 text-center">Kode</th>
+                    <th class="col-md-1 text-center">Kode</th>
                     <th class="col-md-1 text-center">Kamar</th>
                     <th class="col-md-2 text-center">Nama</th>
                     <th class="col-md-1 text-center">Phone</th>
                     <th class="col-md-1 text-center">Tanggal Pemesanan</th>
                     <th class="col-md-1 text-center">Total</th>
-                    <th class="col-md-2 text-center">Status</th>
-                    <th class="col-md-2 text-center">Status</th>
-
+                    <th class="col-md-1 text-center">Status</th>
+                    <th class="col-md-2 text-center">Aksi</th>
                 </tr>
             </thead>
         </table>
     </div>
-
 
     @foreach($riwayat as $item)
     <div class="modal fade" id="detail{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

@@ -4,6 +4,8 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Pama Hotel</title>
 
@@ -25,6 +27,22 @@
 
     <!-- datatables -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+    @foreach($asset as $item) 
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{{ asset('storage/' . $item->background_img) }}') center center no-repeat;
+            background-size: cover;
+            filter: brightness(50%);
+            z-index: -1;
+        }
+        @endforeach
+    </style>
     @yield('link')
 </head>
 
@@ -171,13 +189,13 @@
                         </button>
                     </div>
                     <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
-                        <ul class="navbar-nav mr-lg-2">
+                        <!-- <ul class="navbar-nav mr-lg-2">
                             <li class="nav-item nav-search d-none d-lg-block">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search Here..." aria-label="search" aria-describedby="search">
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
                         <ul class="navbar-nav navbar-nav-right">
                             <li class="nav-item nav-profile dropdown">
 
@@ -202,7 +220,7 @@
 
 
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="#" class="nav-link icon-link">
                                     <i class="mdi mdi-plus-circle-outline"></i>
                                 </a>
@@ -216,7 +234,7 @@
                                 <a href="#" class="nav-link icon-link">
                                     <i class="mdi mdi-clock-outline"></i>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </nav>
@@ -238,12 +256,10 @@
     </div>
 
     <!-- container-scroller -->
-    @include('sweetalert::alert')
-    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
     <!-- vendor -->
     <script src="{{asset('assets/admin/vendors/js/vendor.bundle.base.js')}}"></script>
     <script src="{{asset('assets/admin/vendors/chart.js/Chart.min.js')}}"></script>
-
+    
     <!-- main js -->
     <script src="{{asset('assets/admin/js/master/jquery.cookie.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/admin/js/master/off-canvas.js')}}"></script>
@@ -251,13 +267,16 @@
     <script src="{{asset('assets/admin/js/master/template.js')}}"></script>
     <script src="{{asset('assets/admin/js/master/dashboard.js')}}"></script>
     <script src="{{asset('assets/js/owl.carousel.min.js')}}"></script>
-
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    
     <!-- End custom js for this page-->
     <script src="{{ mix('js/app.js') }}"></script>
-
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    @include('sweetalert::alert')
 
 
     <!-- untuk menampilkan tgl dan jam pada navbar -->
@@ -290,8 +309,11 @@
             dateRangeElement.textContent = formattedDateTime;
         }
 
-        // Panggil fungsi setCurrentDateTime ketika halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', setCurrentDateTime);
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDateTime();
+            // 1000 milisecond atau 1 detik
+            setInterval(setCurrentDateTime, 1000);
+        });
     </script>
 
     <!-- untuk membuat ketika di klik gambar akan membuaka pemilihan file pada edit profil -->

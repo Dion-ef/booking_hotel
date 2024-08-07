@@ -8,6 +8,7 @@ use App\Models\Fasilitas;
 use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
+use App\Models\Leadership;
 use App\Models\Pemesanan;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
@@ -23,7 +24,10 @@ class AdminController extends Controller
     {
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
-        $totalKamar = Kamar::count();
+        $totalKamarKosong = Kamar::where('status','kosong')->count();
+        $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
+        $totalBooking = Riwayat::count();
+        $asset = Asset::all();
         $bookings = Riwayat::select(
             DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
             DB::raw('count(*) as count')
@@ -41,7 +45,7 @@ class AdminController extends Controller
         // Konversi data menjadi JSON
         $bookingsJson = json_encode($bookingsData);
 
-        return view('admin.dashboard', compact('data', 'totalKamar', 'bookingsJson', 'months'));
+        return view('admin.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai'));
     }
 
     // update Profil
@@ -52,7 +56,7 @@ class AdminController extends Controller
             'email' => $request->email,
             //    'password'=>bcrypt($request->password),
         ]);
-        return back()->with('toast_success', 'Profil Berhasil diubah!');
+        return back()->with('success', 'Profil Berhasil diubah!');
     }
 
 
@@ -62,7 +66,8 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::all();
-        return view('admin.kamar', compact('data', 'kategori'));
+        $asset = Asset::all();
+        return view('admin.kamar', compact('data', 'kategori', 'asset'));
     }
     public function getKamar(Request $request)
     {
@@ -72,7 +77,7 @@ class AdminController extends Controller
                 ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
                     $editButton = '<a class="btn btn-warning btn-sm btn-action" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editKamar' . $row->id . '">Edit</a>';
-                    $deleteButton = '<a href="/hapus/kamar/' . $row->id . '" class="btn btn-danger btn-sm btn-action"> Hapus</a>';
+                    $deleteButton = '<a href="/hapus/kamar/' . $row->id . '" class="btn btn-danger btn-sm delete-button" data-id="' . $row->id . '"> Hapus</a>';
                     return $editButton . ' ' . $deleteButton;
                 })
                 ->rawColumns(['actions'])
@@ -92,12 +97,13 @@ class AdminController extends Controller
             'status' => $request->status,
             'kapasitas' => $request->kapasitas,
         ]);
-        return redirect('/kamar/admin')->with('toast_success', 'Barang Berhasil ditambahkan!');
+        return redirect('/kamar/admin')->with('success', 'kamar Berhasil ditambahkan!');
     }
     public function hapusKamar($id)
     {
         DB::table('kamar')->where('id', $id)->delete();
-        return redirect('/kamar/admin')->with('info', 'Data Berhasil Dihapus!');
+        Alert::success('Dihapus', 'Kamar Berhasil Dihapus!');
+        return redirect('/kamar/admin');
     }
     public function updateKamar(Request $request)
     {
@@ -120,6 +126,7 @@ class AdminController extends Controller
         $kamar->status = $request->input('status');
         $kamar->save();
 
+
         return redirect()->back()->with('success', 'Kamar berhasil diupdate');
     }
 
@@ -132,12 +139,13 @@ class AdminController extends Controller
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::paginate(3);
         $getgambar = Gambar::all();
+        $asset = Asset::all();
         $fasilitas = Fasilitas::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('admin.kategori', compact('data', 'kategori', 'gambar', 'getgambar', 'fasilitas'));
+        return view('admin.kategori', compact('data', 'kategori', 'gambar', 'getgambar', 'fasilitas', 'asset'));
     }
     public function getKategori(Request $request)
     {
@@ -166,8 +174,8 @@ class AdminController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $editButton = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editKategori' . $row->id . '"> Edit</a>';
-                    $deleteButton = '<a href="/hapus/kategori/' . $row->id . '" class="btn btn-danger btn-sm btn-action"> Hapus</a>';
-                    $gambarButton = '<a class="btn btn-primary btn-sm btn-action mt-2" data-bs-toggle="modal" data-bs-target="#gambarKategori' . $row->id . '"> Tambah Gambar</a>';
+                    $deleteButton = '<a href="/hapus/kategori/' . $row->id . '" class="btn btn-danger btn-sm delete-button-kategori" data-id="' . $row->id . '"> Hapus</a>';
+                    $gambarButton = '<a class="btn btn-primary btn-sm btn-action mt-2" data-bs-toggle="modal" data-bs-target="#gambarKategori' . $row->id . '" > Tambah Gambar</a>';
                     return $editButton . ' ' . $deleteButton . '<br>' . $gambarButton;
                 })
                 ->rawColumns(['fasilitas', 'gambar', 'action'])
@@ -193,13 +201,15 @@ class AdminController extends Controller
 
         // Menyimpan relasi fasilitas dengan kategori
         $kategori->fasilitas()->attach($request->fasilitas);
-        return redirect('/kategori/admin')->with('toast_success', 'Barang Berhasil ditambahkan!');
+        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil ditambahkan!');
     }
 
     public function hapusKategori($id)
     {
         DB::table('kategori')->where('id', $id)->delete();
-        return redirect('/kategori/admin')->with('info', 'Data Berhasil Dihapus!');
+        Alert::success('Dihapus', 'Kategori Berhasil Dihapus!');
+
+        return redirect('/kategori/admin');
     }
     public function updateKategori(Request $request)
     {
@@ -212,7 +222,7 @@ class AdminController extends Controller
 
 
         $kategori->fasilitas()->sync($request->fasilitas);
-        return redirect('/kategori/admin')->with('toast_success', 'Barang Berhasil diubah!');
+        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil diubah!');
     }
     public function tambahGambar(Request $request, int $id)
     {
@@ -246,7 +256,8 @@ class AdminController extends Controller
     public function hapusGambar($id)
     {
         DB::table('gambar')->where('id', $id)->delete();
-        return redirect('/kategori/admin')->with('info', 'Gambar Berhasil Dihapus!');
+        Alert::success('Dihapus', 'Gambar Berhasil Dihapus!');
+        return redirect('/kategori/admin');
     }
 
 
@@ -258,9 +269,10 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $kamar = Kamar::all();
+        $asset = Asset::all();
         $kategori = Kategori::all();
         $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
-        return view('admin.booking', compact('data', 'pemesanan', 'kamar', 'kategori'));
+        return view('admin.booking', compact('data', 'pemesanan', 'kamar', 'kategori', 'asset'));
     }
     public function getBooking()
     {
@@ -273,7 +285,7 @@ class AdminController extends Controller
                 <a class="btn btn-primary btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
                 <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#edit' . $row->id . '"> Edit</a>
                 <br>
-                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm btn-action mt-1"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
+                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1"><i class="fa-solid fa-xmark" aria-hidden="true" data-id="' . $row->id . '"></i> Check Out</a>
             ';
             })
             ->rawColumns(['action'])
@@ -338,7 +350,10 @@ class AdminController extends Controller
         DB::table('kamar')
             ->where('id', $pemesanan->kamar_id)
             ->update(['status' => 'kosong']);
-        return redirect('/booking/admin')->with('info', 'Berhasil CheckOut!');
+
+        Alert::success('Checkout', 'Berhasil Checkout');
+
+        return redirect('/booking/admin');
     }
 
 
@@ -349,7 +364,8 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $riwayat = Riwayat::paginate(10);
-        return view('admin.riwayat', compact('data', 'riwayat'));
+        $asset = Asset::all();
+        return view('admin.riwayat', compact('data', 'riwayat', 'asset'));
     }
     public function getRiwayat()
     {
@@ -376,7 +392,8 @@ class AdminController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $fasilitas = Fasilitas::all();
-        return view('admin.fasilitas', compact('data', 'fasilitas'));
+        $asset = Asset::all();
+        return view('admin.fasilitas', compact('data', 'fasilitas', 'asset'));
     }
     public function getFasilitas(Request $request)
     {
@@ -386,7 +403,7 @@ class AdminController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editFasilitas' . $row->id . '"> Edit</a>';;
-                    $btn .= ' <a href="/hapus/fasilitas/' . $row->id . '" class="btn btn-danger btn-sm btn-action mt-1"> Hapus</a>';
+                    $btn .= ' <a href="/hapus/fasilitas/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1" data-id="' . $row->id . '"> Hapus</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -399,7 +416,7 @@ class AdminController extends Controller
             'nama' => $request->nama,
         ]);
 
-        return redirect('/fasilitas/admin')->with('toast_success', 'Barang Berhasil ditambahkan!');
+        return redirect('/fasilitas/admin')->with('success', 'Fasilitas Berhasil ditambahkan!');
     }
     public function updateFasilitas(Request $request)
     {
@@ -408,71 +425,20 @@ class AdminController extends Controller
         $fasilitas->save();
 
         // Sinkronisasi fasilitas
-        return redirect('/fasilitas/admin')->with('toast_success', 'Barang Berhasil diubah!');
+        return redirect('/fasilitas/admin')->with('success', 'Fasilitas Berhasil diubah!');
     }
     public function hapusFasilitas($id)
     {
         DB::table('fasilitas')->where('id', $id)->delete();
-        return redirect('/fasilitas/admin')->with('info', 'Data Berhasil Dihapus!');
+        Alert::success('Dihapus', 'Fasilitas Berhasil Dihapus!');
+
+        return redirect('/fasilitas/admin');
     }
 
 
 
-    // // pencarian
-    // public function pencarianKamar(Request $request)
-    // {
-    //     $user = auth()->id();
-    //     $data = Admin::where('id', $user)->get();
-    //     $kategori = Kategori::all();
-    //     if ($request->has('search')) {
-    //         $kamar = Kamar::with('kategori')->where('nama', 'LIKE', '%' . $request->search . '%')->paginate(10);
-    //         $kamar->appends(['search' => $request->search]);
-    //     } else {
-    //         $kamar = Kamar::with('kategori')->paginate(10);
-    //     }
-    //     return view('admin.kamar', compact('data', 'kategori', 'kamar'));
-    // }
-    // public function pencarianBooking(Request $request)
-    // {
-    //     $user = auth()->id();
-    //     $data = Admin::where('id', $user)->get();
-    //     if ($request->has('search')) {
 
-    //         $pemesanan = Pemesanan::with('kategori')->with('kamar')->where('nama', 'LIKE', '%' . $request->search . '%')->paginate(10);
-    //         $pemesanan->appends(['search' => $request->search]);
-    //     } else {
-    //         $pemesanan = Pemesanan::with('kategori')->with('kamar')->paginate(10);
-    //     }
-    //     return view('admin.booking', compact('data', 'pemesanan'));
-    // }
-    // public function pencarianKategori(Request $request)
-    // {
-    //     if ($request->has('search')) {
-    //         $user = auth()->id();
-    //         $data = Admin::where('id', $user)->get();
-    //         $kategori = Kategori::where('nama', 'LIKE', '%' . $request->search . '%')->paginate(10);
-    //         $gambar = [];
-    //         foreach ($kategori as $kat) {
-    //             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
-    //         }
-    //     } else {
-    //         $kategori = Kategori::paginate(10);
-    //     }
-    //     return view('admin.kategori', compact('data', 'kategori'));
-    // }
-    // public function pencarianRiwayat(Request $request)
-    // {
-    //     $user = auth()->id();
-    //     $data = Admin::where('id', $user)->get();
-    //     if ($request->has('search')) {
-    //         $riwayat = Riwayat::where('nama', 'LIKE', '%' . $request->search . '%')->paginate(10);
-    //         $riwayat->appends(['search' => $request->search]);
-    //     } else {
-    //         $riwayat = Riwayat::paginate(10);
-    //     }
-    //     return view('admin.riwayat', compact('data', 'riwayat'));
-    // }
-
+    // Asset
     public function kelolaAsset()
     {
         $user = auth()->id();
@@ -494,6 +460,7 @@ class AdminController extends Controller
             'deskripsi' => 'nullable|string',
             'background_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'welcome_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         // simpan dengan eloquent
         $asset = new Asset();
@@ -514,6 +481,11 @@ class AdminController extends Controller
             $welcomePath = $welcomeImg->store('public/asset_image/welcome_img');
             $asset->welcome_img = str_replace('public/', '', $welcomePath);
         }
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('public/asset_image/background');
+            $asset->logo = str_replace('public/', '', $logoPath);
+        }
         $asset->save();
 
         return redirect()->back()->with('success', 'Asset berhasil ditambahkan!');
@@ -528,15 +500,15 @@ class AdminController extends Controller
                 ->addColumn('background_img', function ($row) {
                     return '<img src="' . asset('storage/' . $row->background_img) . '"  class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
                 })
-                ->addColumn('welcome_img', function ($row) {
-                    return '<img src="' . asset('storage/' . $row->welcome_img) . '" class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
+                ->addColumn('logo', function ($row) {
+                    return '<img src="' . asset('storage/' . $row->logo) . '" class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editAsset' . $row->id . '"> Edit</a>';
                     $btn .= ' <a  class="btn btn-primary btn-sm btn-action mt-1" data-bs-toggle="modal" data-bs-target="#detailAsset' . $row->id . '"> Detail</a>';
                     return $btn;
                 })
-                ->rawColumns(['background_img', 'welcome_img', 'action'])
+                ->rawColumns(['background_img', 'logo', 'action'])
                 ->make(true);
         }
     }
@@ -567,10 +539,88 @@ class AdminController extends Controller
             $welcomePath = $welcomeImg->store('public/asset_image/welcome_img');
             $asset->welcome_img = str_replace('public/', '', $welcomePath);
         }
+        if ($request->hasFile('logo')) {
+            if ($asset->logo) {
+                Storage::disk('public')->delete($asset->logo);
+            }
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('public/asset_image/welcome_img');
+            $asset->logo = str_replace('public/', '', $logoPath);
+        }
 
         $asset->save();
 
 
-        return redirect()->back()->with('success', 'Asset updated successfully.');
+        return redirect()->back()->with('success', 'Asset berhasil diupdate');
+    }
+
+    // Leadership
+    public function leadership()
+    {
+        $leadership = Leadership::all();
+        $asset = Asset::all();
+        return view('admin.leadership', compact('leadership', 'asset'));
+    }
+    public function tambahLeadership(Request $request)
+    {
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:255',
+            'motivasi' => 'nullable|string',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        // simpan dengan eloquent
+        $leadership = new Leadership();
+        $leadership->nama = $request->input('nama');
+        $leadership->jabatan = $request->input('jabatan');
+        $leadership->motivasi = $request->input('motivasi');
+
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar');
+            $gambarPath = $gambar->store('public/asset_image/leadership');
+            $leadership->gambar = str_replace('public/', '', $gambarPath);
+        }
+        $leadership->save();
+
+        return redirect()->back()->with('success', 'Leadership berhasil ditambahkan!');
+    }
+    public function getLeadership(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Leadership::all();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('gambar', function ($row) {
+                    return '<img src="' . asset('storage/' . $row->gambar) . '"  class="custom-img" style="height: 100px; width: 100px; border-radius: 0 !important; object-fit: contain; margin: 5px;">';
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editLeadership' . $row->id . '"> Edit</a>';
+                    $btn .= ' <a  class="btn btn-primary btn-sm btn-action mt-1" data-bs-toggle="modal" data-bs-target="#detailLeadership' . $row->id . '"> Detail</a>';
+                    return $btn;
+                })
+                ->rawColumns(['gambar', 'action'])
+                ->make(true);
+        }
+    }
+    public function updateLeadership(Request $request)
+    {
+        $leadership = leadership::find($request->id);
+        $leadership->nama = $request->nama;
+        $leadership->jabatan = $request->jabatan;
+        $leadership->motivasi = $request->motivasi;
+        if ($request->hasFile('gambar')) {
+            if ($leadership->gambar) {
+                Storage::disk('public')->delete($leadership->gambar);
+            }
+            $gambar = $request->file('gambar');
+            $gambarPath = $gambar->store('public/asset_image/leadership');
+            $leadership->gambar = str_replace('public/', '', $gambarPath);
+        }
+
+        $leadership->save();
+
+
+        return redirect()->back()->with('success', 'Leadership berhasil diupdate');
     }
 }

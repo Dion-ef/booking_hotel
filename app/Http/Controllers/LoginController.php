@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Kamar;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,9 @@ use illuminate\Support\Str;
 class LoginController extends Controller
 {
     public function login(){
-        return view('login');
+        $asset = Asset::all();
+
+        return view('login', compact('asset'));
     }
     public function logout(Request $request){
         Auth::logout();
@@ -26,7 +29,8 @@ class LoginController extends Controller
         return redirect('/login');
     }
     public function register(){
-        return view('register');
+        $asset = Asset::all();
+        return view('register', compact('asset'));
     }
 
     // login with google

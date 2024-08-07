@@ -47,6 +47,10 @@
                                             <div class="input-group mb-3 d-flex">
                                                 <input type="file" class="form-control" id="inputGroupFile02" name="welcome_img">
                                             </div>
+                                            <label for="name" class="form-label fw-bold">Logo</label>
+                                            <div class="input-group mb-3 d-flex">
+                                                <input type="file" class="form-control" id="inputGroupFile02" name="logo">
+                                            </div>
                                         </div>
 
                                         <div class="modal-footer">
@@ -76,8 +80,8 @@
                     <th class="col-md-1 text-center">Email</th>
                     <th class="col-md-1 text-center">Phone</th>
                     <th class="col-md-1 text-center">Alamat</th>
-                    <th class="col-md-1 text-center">Background Imgae</th>
-                    <th class="col-md-2 text-center">Welcome Image</th>
+                    <th class="col-md-1 text-center">Background</th>
+                    <th class="col-md-2 text-center">Logo</th>
                     <th class="col-md-2 text-center">Aksi</th>
 
                 </tr>
@@ -87,7 +91,7 @@
 
 
     @foreach($asset as $item)
-    <div class="modal fade" id="editAsset{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editFasilitasLabel{{$item->id}}" aria-hidden="true" >
+    <div class="modal fade" id="editAsset{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editFasilitasLabel{{$item->id}}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -121,6 +125,11 @@
                             <div class="mb-3">
                                 <img src="{{ asset('storage/' . $item->background_img) }}" alt="Background Image" class="img-thumbnail mb-2" style="max-width: 100%; width:150px;">
                                 <input type="file" class="form-control" id="inputGroupFile02" name="background_img">
+                            </div>
+                            <label for="name" class="form-label fw-bold">Logo</label>
+                            <div class="mb-3">
+                                <img src="{{ asset('storage/' . $item->logo) }}" alt="Background Image" class="img-thumbnail mb-2" style="max-width: 100%; width:150px;">
+                                <input type="file" class="form-control" id="inputGroupFile02" name="logo">
                             </div>
                             <label for="name" class="form-label fw-bold">Welcome Image</label>
                             <div class="mb-3">
@@ -180,6 +189,12 @@
                         <label for="background_img" class="form-label fw-bold">Background Image</label>
                         <div>
                             <img src="{{ asset('storage/' . $item->background_img) }}" alt="Background Image" class="img-thumbnail" style="max-width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="logo" class="form-label fw-bold">Logo</label>
+                        <div>
+                            <img src="{{ asset('storage/' . $item->logo) }}" alt="Logo" class="img-thumbnail" style="max-width: 100%;">
                         </div>
                     </div>
                     <div class="form-group mb-3">

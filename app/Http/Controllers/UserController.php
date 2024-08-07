@@ -7,12 +7,15 @@ use App\Models\Fasilitas;
 use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
+use App\Models\Leadership;
 use App\Models\Pemesanan;
+use App\Models\PesanUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -46,9 +49,11 @@ class UserController extends Controller
     }
     public function tentang()
     {
+        $leadership = Leadership::all();
+
         $getgambar = DB::table('gambar')->limit(7)->get();
         $asset = Asset::all();
-        return view('user.tentang' , compact('getgambar','asset'));
+        return view('user.tentang' , compact('getgambar','asset','leadership'));
     }
     public function kontak()
     {
@@ -160,21 +165,93 @@ class UserController extends Controller
     {
         $kategori = Kategori::all();
         $asset = Asset::all();
+        $kamars = [];
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
+            $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
+
         }
-        return view('user.room', compact('kategori', 'gambar','asset'));
+        return view('user.room', compact('kategori', 'gambar','asset','kamars'));
     }
     public function tentangGuest()
     {
+        $leadership = Leadership::all();
         $asset = Asset::all();
         $getgambar = DB::table('gambar')->limit(7)->get();
-        return view('user.tentang', compact('getgambar','asset'));
+        return view('user.tentang', compact('getgambar','asset','leadership'));
     }
     public function kontakGuest()
     {
         $asset = Asset::all();
         return view('user.kontak', compact('asset'));
+    }
+
+    public function detailGuest($id){
+        $data = Kategori::where('id', $id)->first();
+        $kamar = Kamar::where('kategori_id', $data->id)->where('status', 'kosong')->get();
+        $kategori = Kategori::all();
+        $fasilitas = Kategori::with('fasilitas')->get();
+        $asset = Asset::all();
+        $gambar = [];
+        $kamars = [];
+        foreach ($kategori as $kat) {
+            $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
+            $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
+        }
+        return view('user.detail',compact( 'data', 'kamar', 'kategori', 'gambar','fasilitas','kamars','asset'));
+    }
+
+    public function cekKetersediaanGuest(Request $request)
+    {
+
+
+        $asset = Asset::all();
+        $checkinDate = Carbon::parse($request->checkin_date);
+        $checkoutDate = Carbon::parse($request->checkout_date);
+        $jumlahOrang = $request->jumlah_orang;
+
+
+        // Logika untuk mengecek ketersediaan kamar
+        $kamarTersedia = Kamar::where('status', 'kosong')
+            ->where('kapasitas', '>=', $jumlahOrang)
+            ->whereNotIn('id', function ($query) use ($checkinDate, $checkoutDate) {
+                $query->select('kamar_id')
+                    ->from('pemesanan')
+                    ->where(function ($query) use ($checkinDate, $checkoutDate) {
+                        $query->whereBetween('in', [$checkinDate, $checkoutDate])
+                            ->orWhereBetween('out', [$checkinDate, $checkoutDate])
+                            ->orWhere(function ($query) use ($checkinDate, $checkoutDate) {
+                                $query->where('in', '<=', $checkinDate)
+                                    ->where('out', '>=', $checkoutDate);
+                            });
+                    });
+            })
+            ->get();
+
+        // Mengembalikan hasil ke view
+        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang','asset'));
+    }
+
+    public function pesan(Request $request){
+        $pesan = new PesanUser();
+        $pesan->nama = $request->input('nama');
+        $pesan->phone = $request->input('phone');
+        $pesan->email = $request->input('email');
+        $pesan->pesan = $request->input('pesan');
+        $pesan->save();
+
+        return redirect()->back();
+    }
+    public function pesanGuest(Request $request){
+
+        $pesan = new PesanUser();
+        $pesan->nama = $request->input('nama');
+        $pesan->phone = $request->input('phone');
+        $pesan->email = $request->input('email');
+        $pesan->pesan = $request->input('pesan');
+        $pesan->save();
+
+        return redirect()->back();
     }
 }

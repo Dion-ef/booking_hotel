@@ -22,17 +22,23 @@ Route::get('/register', [App\Http\Controllers\LoginController::class, 'register'
 Route::post('/register/store', [App\Http\Controllers\LoginController::class, 'registerStore']);
 Route::post('/user/validasi', [App\Http\Controllers\LoginController::class, 'validasi']);
 
-// halaman untuk user yang belum login
-Route::get('/index', [App\Http\Controllers\UserController::class, 'indexGuest'])->middleware('guest');
-Route::get('/room', [App\Http\Controllers\UserController::class, 'roomGuest'])->middleware('guest');
-Route::get('/tentang', [App\Http\Controllers\UserController::class, 'tentangGuest'])->middleware('guest');
-Route::get('/kontak', [App\Http\Controllers\UserController::class, 'kontakGuest'])->middleware('guest');
-Route::get('/user/detail', [App\Http\Controllers\UserController::class, 'detail'])->middleware('guest');
-
-
 // login menggunakan google
 Route::get('/auth/google', [App\Http\Controllers\LoginController::class, 'redirect'])->name('google.redirect');
 Route::get('/google/callback', [App\Http\Controllers\LoginController::class, 'callback'])->name('google.callback');
+
+Route::middleware('guest')->group(function () {
+    // halaman untuk user yang belum login
+    Route::get('/index', [App\Http\Controllers\UserController::class, 'indexGuest']);
+    Route::get('/room', [App\Http\Controllers\UserController::class, 'roomGuest']);
+    Route::get('/tentang', [App\Http\Controllers\UserController::class, 'tentangGuest']);
+    Route::get('/kontak', [App\Http\Controllers\UserController::class, 'kontakGuest']);
+    Route::get('/user/detail', [App\Http\Controllers\UserController::class, 'detail']);
+    Route::get('/user/guest/detail/{id}', [App\Http\Controllers\UserController::class, 'detailGuest']);
+    Route::get('/user/cek-ketersediaan', [UserController::class, 'cekKetersediaanGuest'])->name('cek-ketersediaan-guest');
+    Route::post('/pesan/guest', [App\Http\Controllers\UserController::class, 'pesanGuest']);
+
+});
+
 
 // rout untuk admin
 Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
@@ -42,11 +48,11 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::post('/tambah/kamar', [App\Http\Controllers\AdminController::class, 'tambahKamar']);
     Route::get('kamar/{id}', [App\Http\Controllers\AdminController::class, 'showKamar'])->name('kamar.show');
     Route::post('/update/kamar', [App\Http\Controllers\AdminController::class, 'updateKamar'])->name('kamar.update');
-    Route::get('/hapus/kamar/{id}', [App\Http\Controllers\AdminController::class, 'hapusKamar']);
+    Route::get('/hapus/kamar/{id}', [App\Http\Controllers\AdminController::class, 'hapusKamar'])->name('hapusKamar');
     Route::get('/kategori/admin', [App\Http\Controllers\AdminController::class, 'kategori']);
     Route::get('/kategori/get', [App\Http\Controllers\AdminController::class, 'getKategori'])->name('admin.kategori.data');
     Route::post('/update/kategori', [App\Http\Controllers\AdminController::class, 'updateKategori']);
-    Route::get('/hapus/kategori/{id}', [App\Http\Controllers\AdminController::class, 'hapusKategori']);
+    Route::get('/hapus/kategori/{id}', [App\Http\Controllers\AdminController::class, 'hapusKategori'])->name('hapusKategori');
     Route::post('/tambah/kategori', [App\Http\Controllers\AdminController::class, 'tambahKategori']);
     Route::post('/kategori/{id}/tambah-gambar', [App\Http\Controllers\AdminController::class, 'tambahGambar'])->name('kategori.tambah.gambar');
     Route::get('/hapus/gambar/{id}', [App\Http\Controllers\AdminController::class, 'hapusGambar']);
@@ -70,13 +76,14 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::post('/tambah/asset', [App\Http\Controllers\AdminController::class, 'tambahAsset']);
     Route::get('/asset/get', [App\Http\Controllers\AdminController::class, 'getAsset'])->name('admin.asset.data');
     Route::post('/update/asset', [App\Http\Controllers\AdminController::class, 'updateAsset']);
-
-
+    Route::get('/kelola/leadership/admin', [App\Http\Controllers\AdminController::class, 'leadership']);
+    Route::post('/tambah/leadership', [App\Http\Controllers\AdminController::class, 'tambahLeadership']);
+    Route::get('/leadership/get', [App\Http\Controllers\AdminController::class, 'getLeadership'])->name('admin.leadership.data');
+    Route::post('/update/leadership', [App\Http\Controllers\AdminController::class, 'updateLeadership']);
 
     // chart
     Route::get('/chart/riwayat', [App\Http\Controllers\ChartController::class, 'chartRiwayat']);
     Route::get('/chart/user', [App\Http\Controllers\ChartController::class, 'chartUserAktive']);
-
 });
 
 
@@ -93,7 +100,7 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::get('/booking/konfirmasi/{id}', [App\Http\Controllers\PesananController::class, 'konfirmasi'])->middleware('auth')->name('booking.confirm');
     Route::get('/cek-ketersediaan', [UserController::class, 'cekKetersediaan'])->name('cek-ketersediaan');
     Route::get('/user/detail/{id}', [App\Http\Controllers\UserController::class, 'detail'])->middleware('auth');
-
+    Route::post('/pesan', [App\Http\Controllers\UserController::class, 'pesan'])->middleware('auth');
 });
 
 // Resepsionis

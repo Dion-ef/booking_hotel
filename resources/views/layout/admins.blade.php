@@ -4,6 +4,7 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Pama Hotel</title>
 
@@ -23,6 +24,22 @@
 
     <!-- datatables -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+        @foreach($asset as $item) 
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{{ asset('storage/' . $item->background_img) }}') center center no-repeat;
+            background-size: cover;
+            filter: brightness(50%);
+            z-index: -1;
+        }
+        @endforeach
+    </style>
     @yield('link')
 </head>
 
@@ -32,7 +49,7 @@
         <div class="rw p-0 m-0 proBanner " id="proBanner">
 
             <!-- partial:./partials/_sidebar.html -->
-             <!-- background berada di navbar -->
+            <!-- background berada di navbar baris 22042-->
             <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
                 <!-- <div class="header-text">
                     <span>Pama Hotel</span>
@@ -92,25 +109,39 @@
                         <p>Manage</p>
                         <span></span>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link {{ Request::is('/kelola/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
                             <i class="mdi mdi-palette menu-icon"></i>
                             <span class="menu-title">CMS</span>
                         </a>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('/kelola/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
+                            <i class="mdi mdi-palette menu-icon"></i>
+                            <span class="menu-title">Leadership</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('/kelola/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
+                            <i class="mdi mdi-palette menu-icon"></i>
+                            <span class="menu-title">CMS</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="mdi mdi-palette menu-icon"></i>
                             <span class="menu-title">CMS</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="ui-basic">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="{{route('asset.admin')}}">Asset</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Leadership</a></li>
-                            </ul>
+                            <a class="nav-link {{ Request::is('/kelola/asset/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
+                                <span class="menu-title">Asset</span>
+                            </a>
+                            <a class="nav-link {{ Request::is('/kelola/leadership/admin') ? 'active' : '' }}" href="/kelola/leadership/admin">
+                                <span class="menu-title">Leadership</span>
+                            </a>
                         </div>
-                    </li> -->
+                    </li>
                     <li class="nav-item sidebar-category">
                         <p>Keluar</p>
                         <span></span>
@@ -204,13 +235,24 @@
                         </button>
                     </div>
                     <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
-                        <ul class="navbar-nav mr-lg-2">
+                        <!-- <ul class="navbar-nav mr-lg-2">
                             <li class="nav-item nav-search d-none d-lg-block">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search Here..." aria-label="search" aria-describedby="search">
+                                    
+
                                 </div>
+                                
+
                             </li>
-                        </ul>
+                        </ul> 
+
+                         <ul class="navbar-nav mr-lg-2">
+                        <h4 class="text-black m-3">Welcome back, {{ Auth::user()->name }}</h4>
+                                
+
+                            </li>
+                        </ul>  -->
                         <ul class="navbar-nav navbar-nav-right">
                             <li class="nav-item nav-profile dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
@@ -282,12 +324,12 @@
     </div>
 
     <!-- container-scroller -->
-    @include('sweetalert::alert')
-    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
     <!-- vendor -->
     <script src="{{asset('assets/admin/vendors/js/vendor.bundle.base.js')}}"></script>
     <script src="{{asset('assets/admin/vendors/chart.js/Chart.min.js')}}"></script>
 
+    <!-- sweetallert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- main js -->
     <script src="{{asset('assets/admin/js/master/jquery.cookie.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/admin/js/master/off-canvas.js')}}"></script>
@@ -299,6 +341,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    @include('sweetalert::alert')
+
 
 
     <!-- untuk menampilkan tgl dan jam pada navbar -->
@@ -331,8 +375,11 @@
             dateRangeElement.textContent = formattedDateTime;
         }
 
-        // Panggil fungsi setCurrentDateTime ketika halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', setCurrentDateTime);
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDateTime();
+            // 1000 milisecond atau 1 detik
+            setInterval(setCurrentDateTime, 1000);
+        });
     </script>
 
     <!-- untuk membuat ketika di klik gambar akan membuaka pemilihan file pada edit profil -->

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Kamar;
 use App\Models\Kategori;
 use App\Models\Pemesanan;
@@ -85,12 +86,15 @@ class PesananController extends Controller
         } else {
             return back()->withErrors('Kamar tidak ditemukan');
         }
+        
     
         return redirect()->route('booking.confirm', ['id' => $pemesanan->id]);   
     }
 
     public function konfirmasi($id){
         $pemesanan = Pemesanan::findOrFail($id);
-        return view('user.konfirmasi', compact('pemesanan'));
+        $asset = Asset::all();
+
+        return view('user.konfirmasi', compact('pemesanan','asset'));
     }
 }

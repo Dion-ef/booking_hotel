@@ -1,5 +1,6 @@
 @extends('layout.admins')
 
+
 @section('konten')
 
 <div class=" container p-3 bg-body rounded shadow-xl">
@@ -115,4 +116,5 @@
 
 @section('script')
 <script src="{{asset('assets/js/datatables.js')}}"></script>
+
 @endSection

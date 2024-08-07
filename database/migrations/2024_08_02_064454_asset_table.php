@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('background_img');
             $table->string('welcome_img');
 
+
             $table->timestamps();
         });
     }
