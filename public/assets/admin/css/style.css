@@ -22240,11 +22240,11 @@ dl li {
 
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .count-indicator .count {
   position: absolute;
-  left: 35%;
-  width: 21px;
-  height: 21px;
+  left: 65%;
+  width: 13px;
+  height: 13px;
   border-radius: 10px;
-  top: -2px;
+  top: 4px;
   font-size: 10px;
   line-height: 21px;
 }

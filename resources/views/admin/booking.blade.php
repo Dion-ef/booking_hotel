@@ -141,12 +141,12 @@
                             <input type="nama" name="jumlah_orang" class="form-control mb-2" value="{{$item->jumlah_orang}}">
                             <div>
                                 <label class="text-black fw-bold" for="checkin_date">Date Check In</label>
-                                <input type="text" id="checkin_date" name="Checkin" class="form-control mb-2" value="{{ $item->in }}">
+                                <input type="date" id="checkin_date" name="Checkin" class="form-control mb-2" value="{{ $item->in ? \Carbon\Carbon::parse($item->in)->format('Y-m-d') : '' }}">
                             </div>
 
                             <div>
-                                <label class="text-black fw-bold" for="checkin_date">Date Check In</label>
-                                <input type="text" id="checkin_date" name="Checkout" class="form-control mb-2" value="{{ $item->out }}">
+                                <label class="text-black fw-bold" for="checkin_date">Date Check Out</label>
+                                <input type="date" id="checkin_date" name="Checkout" class="form-control mb-2" value="{{ $item->out ? \Carbon\Carbon::parse($item->out)->format('Y-m-d') : '' }}">
                             </div>
                             <label for="tgl_pemesanan" class="form-label fw-bold">Tanggal_pemesanan</label>
                             <input type="status" name="tgl_pemesanan" class="form-control mb-2" value="{{$item->tgl_pemesanan}}">

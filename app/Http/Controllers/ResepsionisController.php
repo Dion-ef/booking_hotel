@@ -8,6 +8,7 @@ use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
 use App\Models\Pemesanan;
+use App\Models\PesanUser;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,8 @@ class ResepsionisController extends Controller
         $data = Admin::where('id', $user)->first();
         $totalKamarKosong = Kamar::where('status','kosong')->count();
         $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
-        $totalBooking = Riwayat::count();
+        $totalBooking = Pemesanan::count();
+        $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
         $bookings = Riwayat::select(
             DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
@@ -42,41 +44,42 @@ class ResepsionisController extends Controller
 
         // Konversi data menjadi JSON
         $bookingsJson = json_encode($bookingsData);
-        return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai'));
-    }
-    public function profilUpdateResepsionis(Request $request)
-    {
-        $user = $request->user();
-
-    // Periksa jika pengguna tidak ada
-    if (!$user) {
-        return back()->withErrors(['error' => 'Pengguna tidak terautentikasi.']);
+        return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai','pesanUser'));
     }
 
-    // Validasi data request jika diperlukan
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:8|confirmed', // Validasi password jika ada
-    ]);
+    // public function profilUpdateResepsionis(Request $request)
+    // {
+    //     $user = $request->user();
 
-    // Data yang akan diperbarui
-    $updateData = [
-        'name' => $request->name,
-        'email' => $request->email,
-    ];
+    // // Periksa jika pengguna tidak ada
+    // if (!$user) {
+    //     return back()->withErrors(['error' => 'Pengguna tidak terautentikasi.']);
+    // }
 
-    // Jika ada password baru yang diberikan, hash dan tambahkan ke data update
-    if ($request->filled('password')) {
-        $updateData['password'] = bcrypt($request->password);
-    }
+    // // Validasi data request jika diperlukan
+    // $request->validate([
+    //     'name' => 'required|string|max:255',
+    //     'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+    //     'password' => 'nullable|string|min:8|confirmed', // Validasi password jika ada
+    // ]);
 
-    // Perbarui data pengguna
-    $user->update($updateData);
+    // // Data yang akan diperbarui
+    // $updateData = [
+    //     'name' => $request->name,
+    //     'email' => $request->email,
+    // ];
 
-    // Redirect kembali dengan pesan sukses
-    return back()->with('toast_success', 'Profil Berhasil diubah!');
-    }
+    // // Jika ada password baru yang diberikan, hash dan tambahkan ke data update
+    // if ($request->filled('password')) {
+    //     $updateData['password'] = bcrypt($request->password);
+    // }
+
+    // // Perbarui data pengguna
+    // $user->update($updateData);
+
+    // // Redirect kembali dengan pesan sukses
+    // return back()->with('toast_success', 'Profil Berhasil diubah!');
+    // }
 
 
     // Kamar
@@ -86,12 +89,13 @@ class ResepsionisController extends Controller
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::all();
         $asset = Asset::all();
+        $pesanUser = PesanUser::limit(3)->get();
         $kamar = Kamar::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar','asset'));
+        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar','asset','pesanUser'));
     }
     public function getKamarResepsionis(Request $request)
     {
@@ -114,14 +118,15 @@ class ResepsionisController extends Controller
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
         $kamar = Kamar::all();
+        $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
         $kategori = Kategori::all();
         $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
-        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori','asset'));
+        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori','asset','pesanUser'));
     }
     public function getBookingResepsionis()
     {
-        $bookings = Pemesanan::with('kamar')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
+        $bookings = Pemesanan::with('kamar')->whereIn('status',['paid', 'unpaid'])->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
 
         return DataTables::of($bookings)
             ->addIndexColumn()
@@ -129,7 +134,7 @@ class ResepsionisController extends Controller
                 return '
                 <a class="btn btn-primary btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
                 <br>
-                <a href="/checkout/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1"><i class="fa-solid fa-xmark" aria-hidden="true" data-id="' . $row->id . '"></i> Check Out</a>
+                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1"><i class="fa-solid fa-xmark" aria-hidden="true" data-id="' . $row->id . '"></i> Check Out</a>
             ';
             })
             ->rawColumns(['action'])
@@ -147,30 +152,16 @@ class ResepsionisController extends Controller
         }
 
         // Simpan data pemesanan ke dalam tabel riwayat dengan query builder
-        DB::table('riwayat_pemesanan')->insert([
-            'nama_kamar' => $pemesanan->kamar->nama,
-            'kode' => $pemesanan->kode,
-            'jenis_kamar' => $pemesanan->kategori->nama,
-            'tanggal_pemesanan' => $pemesanan->tgl_pemesanan,
-            'tanggal_checkin' => $pemesanan->in,
-            'tanggal_checkout' => $pemesanan->out,
-            'nama' => $pemesanan->nama,
-            'email' => $pemesanan->email,
-            'phone' => $pemesanan->phone,
-            'jumlah_orang' => $pemesanan->jumlah_orang,
+        DB::table('pemesanan')->update([
             'status' => 'selesai',
-            'total' => $pemesanan->total,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
-        // Hapus pemesanan dari tabel pemesanan
-        DB::table('pemesanan')->where('id', $id)->delete();
 
         // Update status kamar menjadi kosong
         DB::table('kamar')
             ->where('id', $pemesanan->kamar_id)
             ->update(['status' => 'kosong']);
-        Alert::success('Checkout', 'Berhasil Checkout!');
+
+        Alert::success('Checkout', 'Berhasil Checkout');
 
         return redirect('/resepsionis/booking');
     }
@@ -179,20 +170,20 @@ class ResepsionisController extends Controller
     public function riwayatResepsionis(){
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
-        $riwayat = Riwayat::paginate(10);
+        $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
         $asset = Asset::all();
-        return view('resepsionis.riwayat', compact('data', 'riwayat','asset'));
+        $pesanUser = PesanUser::limit(3)->get();
+        return view('resepsionis.riwayat', compact('data', 'pemesanan','asset','pesanUser'));
     }
     public function getRiwayatResepsionis()
     {
-        $riwayat = Riwayat::all(); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
+        $bookings = Pemesanan::with('kamar')->where('status','selesai')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']);
 
-        return DataTables::of($riwayat)
+        return DataTables::of($bookings)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 return '
-                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '"> Detail</a>
-
+                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
             ';
             })
             ->rawColumns(['action'])

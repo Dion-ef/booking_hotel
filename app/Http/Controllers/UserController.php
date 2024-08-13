@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotifikasiPesan;
 use App\Models\Asset;
 use App\Models\Fasilitas;
 use App\Models\Gambar;
@@ -64,7 +65,11 @@ class UserController extends Controller
     {
         $data = Pemesanan::with('kategori')->with('kamar')->where('user_id', Auth::user()->id)->paginate(10);
         $asset = Asset::all();
-        return view('user.riwayat', compact('data','asset'));
+        $gambar = [];
+        foreach ($data as $kat) {
+            $gambar[$kat->id] = Gambar::where('kategori_id', $kat->kategori->id)->get();
+        }
+        return view('user.riwayat', compact('data','asset','gambar'));
     }
     public function pemesanan($id)
     {
@@ -241,6 +246,14 @@ class UserController extends Controller
         $pesan->pesan = $request->input('pesan');
         $pesan->save();
 
+        $notifPesan = [
+            'nama' => $request->nama,
+            'pesan' => $request->pesan,
+        ];
+    
+        // Log data sebelum emit event    
+        event(new NotifikasiPesan($notifPesan));
+
         return redirect()->back();
     }
     public function pesanGuest(Request $request){
@@ -251,6 +264,14 @@ class UserController extends Controller
         $pesan->email = $request->input('email');
         $pesan->pesan = $request->input('pesan');
         $pesan->save();
+
+        $notifPesan = [
+            'nama' => $request->nama,
+            'pesan' => $request->pesan,
+        ];
+    
+        // Log data sebelum emit event    
+        event(new NotifikasiPesan($notifPesan));
 
         return redirect()->back();
     }

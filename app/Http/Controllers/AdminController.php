@@ -10,6 +10,7 @@ use App\Models\Kamar;
 use App\Models\Kategori;
 use App\Models\Leadership;
 use App\Models\Pemesanan;
+use App\Models\PesanUser;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +27,10 @@ class AdminController extends Controller
         $data = Admin::where('id', $user)->first();
         $totalKamarKosong = Kamar::where('status','kosong')->count();
         $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
-        $totalBooking = Riwayat::count();
+        $totalBooking = Pemesanan::count();
+        $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
-        $bookings = Riwayat::select(
+        $bookings = Pemesanan::where('status','selesai')->select(
             DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
             DB::raw('count(*) as count')
         )->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))->get();
@@ -45,7 +47,7 @@ class AdminController extends Controller
         // Konversi data menjadi JSON
         $bookingsJson = json_encode($bookingsData);
 
-        return view('admin.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai'));
+        return view('admin.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai','pesanUser'));
     }
 
     // update Profil
@@ -67,7 +69,8 @@ class AdminController extends Controller
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::all();
         $asset = Asset::all();
-        return view('admin.kamar', compact('data', 'kategori', 'asset'));
+        $pesanUser = PesanUser::limit('3');
+        return view('admin.kamar', compact('data', 'kategori', 'asset','pesanUser'));
     }
     public function getKamar(Request $request)
     {
@@ -276,7 +279,7 @@ class AdminController extends Controller
     }
     public function getBooking()
     {
-        $bookings = Pemesanan::with('kamar')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
+        $bookings = Pemesanan::with('kamar')->whereIn('status',['paid', 'unpaid'])->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
 
         return DataTables::of($bookings)
             ->addIndexColumn()
@@ -327,24 +330,9 @@ class AdminController extends Controller
         }
 
         // Simpan data pemesanan ke dalam tabel riwayat dengan query builder
-        DB::table('riwayat_pemesanan')->insert([
-            'nama_kamar' => $pemesanan->kamar->nama,
-            'kode' => $pemesanan->kode,
-            'jenis_kamar' => $pemesanan->kategori->nama,
-            'tanggal_pemesanan' => $pemesanan->tgl_pemesanan,
-            'tanggal_checkin' => $pemesanan->in,
-            'tanggal_checkout' => $pemesanan->out,
-            'nama' => $pemesanan->nama,
-            'email' => $pemesanan->email,
-            'phone' => $pemesanan->phone,
-            'jumlah_orang' => $pemesanan->jumlah_orang,
+        DB::table('pemesanan')->update([
             'status' => 'selesai',
-            'total' => $pemesanan->total,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
-        // Hapus pemesanan dari tabel pemesanan
-        DB::table('pemesanan')->where('id', $id)->delete();
 
         // Update status kamar menjadi kosong
         DB::table('kamar')
@@ -363,20 +351,21 @@ class AdminController extends Controller
     {
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
-        $riwayat = Riwayat::paginate(10);
+        $kamar = Kamar::all();
         $asset = Asset::all();
-        return view('admin.riwayat', compact('data', 'riwayat', 'asset'));
+        $kategori = Kategori::all();
+        $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
+        return view('admin.riwayat', compact('data', 'pemesanan', 'kamar', 'kategori', 'asset'));
     }
     public function getRiwayat()
     {
-        $riwayat = Riwayat::all(); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
+        $bookings = Pemesanan::with('kamar')->with('kategori')->where('status','selesai')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']);
 
-        return DataTables::of($riwayat)
+        return DataTables::of($bookings)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 return '
-                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '"> Detail</a>
-
+                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
             ';
             })
             ->rawColumns(['action'])

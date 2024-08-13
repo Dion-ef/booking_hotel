@@ -27,25 +27,32 @@ class Pemesanan extends Model
     {
         return $this->belongsTo('App\Models\Kategori');
     }
-    public static function generateKodePemesanan()
-    {
-        // Merge tabel pemesanan dan tabel riwayat kemudian diambil kodenya untuk diambil numeriknya
-        $kodeAkhir = DB::table('pemesanan')
-            ->select('kode')
-            ->union(DB::table('riwayat_pemesanan')->select('kode'))
-            ->orderBy('kode', 'desc')
-            ->first();
+    // public static function generateKodePemesanan()
+    // {
+    //     // Merge tabel pemesanan dan tabel riwayat kemudian diambil kodenya untuk diambil numeriknya
+    //     $kodeAkhir = DB::table('pemesanan')
+    //         ->select('kode')
+    //         ->union(DB::table('riwayat_pemesanan')->select('kode'))
+    //         ->orderBy('kode', 'desc')
+    //         ->first();
 
         
-        $nomorAkhir = 0;
-        if ($kodeAkhir && !empty($kodeAkhir->kode)) {
-            $nomorAkhir = (int) substr($kodeAkhir->kode, 3); // Mengambil hanya numerik dari kode
-        }
+    //     $nomorAkhir = 0;
+    //     if ($kodeAkhir && !empty($kodeAkhir->kode)) {
+    //         $nomorAkhir = (int) substr($kodeAkhir->kode, 3); // Mengambil hanya numerik dari kode
+    //     }
 
-        // Generate kode baru
-        $nomorBaru = $nomorAkhir + 1;
-        $kodePesanan = 'BKG' . str_pad($nomorBaru, 4, '0', STR_PAD_LEFT);
+    //     // Generate kode baru
+    //     $nomorBaru = $nomorAkhir + 1;
+    //     $kodePesanan = 'BKG' . str_pad($nomorBaru, 4, '0', STR_PAD_LEFT);
 
-        return $kodePesanan;
+    //     return $kodePesanan;
+    // }
+
+    public static function generateKodePemesanan()
+    {
+        $latestPemesanan = self::latest('id')->first();
+        $kode = 'BKG' . str_pad(optional($latestPemesanan)->id + 1, 4, '0', STR_PAD_LEFT);
+        return $kode;
     }
 }

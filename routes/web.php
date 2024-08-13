@@ -1,7 +1,10 @@
 <?php
 
+use App\Events\NotifikasiBooking;
+use App\Events\NotifikasiPesan;
 use App\Http\Controllers\UserController;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -116,3 +119,15 @@ Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], functio
     Route::get('/resepsionis/riwayat', [App\Http\Controllers\ResepsionisController::class, 'riwayatResepsionis']);
     Route::get('/resepsionis/riwayat/get', [App\Http\Controllers\ResepsionisController::class, 'getRiwayatResepsionis'])->name('resepsionis.riwayat.data');
 });
+
+// test pusher
+Route::get('/send-event', function(){
+    $notifPesan = [
+        'nama' => 'John',
+        'pesan' => 'Haii aku john',
+    ];
+    event(new NotifikasiPesan($notifPesan));
+
+    return 'Event broadcasted!';
+});
+

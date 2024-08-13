@@ -117,4 +117,5 @@
 @section('script')
 <script src="{{asset('assets/js/datatables.js')}}"></script>
 
+
 @endSection

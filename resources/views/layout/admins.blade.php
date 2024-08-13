@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link href="{{asset('font/css/all.min.css')}}" rel="stylesheet">
 
+
     <!-- datatables -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
     <style>
@@ -143,7 +144,7 @@
                         </div>
                     </li>
                     <li class="nav-item sidebar-category">
-                        <p>Keluar</p>
+                        <p>Logout</p>
                         <span></span>
                     </li>
                     <li class="nav-item">
@@ -181,54 +182,6 @@
                                 <h4 <h4 id="dateRange" class="mb-0 font-weight-bold d-none d-xl-block"></h4>
                             </li>
 
-                            <li class="nav-item dropdown me-2">
-                                <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-                                    <i class="mdi mdi-email-open mx-0"></i>
-                                    <span class="count bg-danger">1</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                                    <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-                                    <a class="dropdown-item preview-item">
-                                        <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-success">
-                                                <i class="mdi mdi-information mx-0"></i>
-                                            </div>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                Just now
-                                            </p>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item preview-item">
-                                        <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-warning">
-                                                <i class="mdi mdi-settings mx-0"></i>
-                                            </div>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                Private message
-                                            </p>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item preview-item">
-                                        <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-info">
-                                                <i class="mdi mdi-account-box mx-0"></i>
-                                            </div>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                2 days ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </li>
                         </ul>
                         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                             <span class="mdi mdi-menu"></span>
@@ -253,6 +206,9 @@
 
                             </li>
                         </ul>  -->
+                        <!-- @foreach($asset as $item)
+                        <img src="{{ asset('storage/' . $item->logo) }}" alt="Image" class="img-fluid rounded" style="height: 60px;">
+                        @endforeach -->
                         <ul class="navbar-nav navbar-nav-right">
                             <li class="nav-item nav-profile dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
@@ -328,7 +284,7 @@
     <script src="{{asset('assets/admin/vendors/js/vendor.bundle.base.js')}}"></script>
     <script src="{{asset('assets/admin/vendors/chart.js/Chart.min.js')}}"></script>
 
-    <!-- sweetallert -->
+    <!-- sweetallert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- main js -->
     <script src="{{asset('assets/admin/js/master/jquery.cookie.js')}}" type="text/javascript"></script>
@@ -405,6 +361,30 @@
                 }
             });
         });
+    </script>
+
+     <!-- notif realtime dengan pusher, mengambil dari event NotifikasiBooking  -->
+    <script>
+        window.Echo.channel('booking-notif')
+            .listen('NotifikasiBooking', (e) => {
+                Swal.fire({
+                    title: 'Booking Notification',
+                    text: `${e.bookingData.nama} telah memesan kamar ${e.bookingData.kamar} dari ${e.bookingData.checkin} sampai ${e.bookingData.checkout}`,
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            });
+    </script>
+
+    <script>
+        window.Echo.channel('notif-pesan')
+            .listen('NotifikasiPesan', (e) => {
+                Swal.fire({
+                    title: 'Message',
+                    html: `<p> Ada Pesan dari ${e.notifPesan.nama} <p class="fw-bold">"${e.notifPesan.pesan}"</p></p>`,
+                    icon: 'info'
+                });
+            });
     </script>
     @yield('script')
 </body>

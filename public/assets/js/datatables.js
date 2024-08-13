@@ -287,48 +287,48 @@ $(document).ready(function() {
         });
     });
 
-    $('#booking-table').on('click', '.delete-button', function (event) {
-        event.preventDefault();
-        const id= $(this).data('id');
+    // $('#booking-table').on('click', '.delete-button', function (event) {
+    //     event.preventDefault();
+    //     const id= $(this).data('id');
 
-        Swal.fire({
-            title: 'Apakah Anda yakin ingin checkout?',
-            text: "Anda tidak akan bisa mengembalikannya!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Checkout!',
-            cancelButtonText: 'Tidak, batalkan!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Ambil token CSRF dari meta tag
-                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    //     Swal.fire({
+    //         title: 'Apakah Anda yakin ingin checkout?',
+    //         text: "Anda tidak akan bisa mengembalikannya!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Ya, Checkout!',
+    //         cancelButtonText: 'Tidak, batalkan!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // Ambil token CSRF dari meta tag
+    //             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                // Jika dikonfirmasi, submit form untuk menghapus kamar
-                const form = document.createElement('form');
-                form.action = `/hapus/booking/`+ id;
-                form.method = 'POST';
+    //             // Jika dikonfirmasi, submit form untuk menghapus kamar
+    //             const form = document.createElement('form');
+    //             form.action = `/hapus/booking/`+ id;
+    //             form.method = 'POST';
 
-                // Tambahkan token CSRF ke dalam form
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = '_token';
-                csrfInput.value = token;
-                form.appendChild(csrfInput);
+    //             // Tambahkan token CSRF ke dalam form
+    //             const csrfInput = document.createElement('input');
+    //             csrfInput.type = 'hidden';
+    //             csrfInput.name = '_token';
+    //             csrfInput.value = token;
+    //             form.appendChild(csrfInput);
 
-                // Tambahkan metode delete ke dalam form
-                const methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'GET';
-                form.appendChild(methodInput);
+    //             // Tambahkan metode delete ke dalam form
+    //             const methodInput = document.createElement('input');
+    //             methodInput.type = 'hidden';
+    //             methodInput.name = '_method';
+    //             methodInput.value = 'GET';
+    //             form.appendChild(methodInput);
 
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
-    });
+    //             document.body.appendChild(form);
+    //             form.submit();
+    //         }
+    //     });
+    // });
 });
 
 
@@ -363,17 +363,18 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: ajaxUrl,
+        pageLength: 5, // Atur jumlah data per halaman
+        lengthMenu: [5, 10, 25, 50, 100],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'kode', name: 'kode' },
-            { data: 'nama_kamar', name: 'nama_kamar' },
+            { data: 'kamar.nama', name: 'kamar.nama' },
             { data: 'nama', name: 'nama' },
-            { data: 'phone', name: 'phone' },
-            { data: 'tanggal_pemesanan', name: 'tanggal_pemesanan' },
+            { data: 'in', name: 'in' },
+            { data: 'out', name: 'out' },
+            { data: 'jumlah_orang', name: 'jumlah_orang' },
             { data: 'total', name: 'total', render: $.fn.dataTable.render.number(',', '.', 2, 'Rp.') },
-            { data: 'status', name: 'status', render: function(data, type, row) {
-                return '<span class="text-danger">' + data + '</span>';
-            }},
+            { data: 'status', name: 'status' },
             { data: 'action', name: 'action', orderable: false, searchable: false },
         ]
     });
@@ -756,17 +757,18 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: ajaxUrl,
+        pageLength: 5, // Atur jumlah data per halaman
+        lengthMenu: [5, 10, 25, 50, 100],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'kode', name: 'kode' },
-            { data: 'nama_kamar', name: 'nama_kamar' },
+            { data: 'kamar.nama', name: 'kamar.nama' },
             { data: 'nama', name: 'nama' },
-            { data: 'phone', name: 'phone' },
-            { data: 'tanggal_pemesanan', name: 'tanggal_pemesanan' },
+            { data: 'in', name: 'in' },
+            { data: 'out', name: 'out' },
+            { data: 'jumlah_orang', name: 'jumlah_orang' },
             { data: 'total', name: 'total', render: $.fn.dataTable.render.number(',', '.', 2, 'Rp.') },
-            { data: 'status', name: 'status', render: function(data, type, row) {
-                return '<span class="text-danger">' + data + '</span>';
-            }},
+            { data: 'status', name: 'status' },
             { data: 'action', name: 'action', orderable: false, searchable: false },
         ]
     });

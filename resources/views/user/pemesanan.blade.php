@@ -131,10 +131,7 @@
                                         <div class="slider-item">
                                             <img src="{{ asset('storage/' . $img->gambar) }}" alt="Gambar Kategori" class="fixed-height-img-pemesanan">
                                         </div>
-                                        <!-- <div class="owl-nav">
-                                    <button class="owl-prev"><i class="fa fa-arrow-left"></i></button>
-                                    <button class="owl-next"><i class="fa fa-arrow-right"></i></button>
-                                </div> -->
+                                        
                                         @endforeach
                                         @endif
                                     </div>

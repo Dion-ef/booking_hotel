@@ -6,6 +6,7 @@
 @endSection
 @section('konten')
 <!-- bisa pakai class data dan hapus col -->
+ 
 <div class="row mb-5 mt-5"> 
 
     <div class="col-md-4">
@@ -105,4 +106,5 @@
 @section('script')
 
 <script src="{{asset('assets/js/chartku.js')}}"></script>
+
 @endSection

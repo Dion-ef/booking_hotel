@@ -138,49 +138,26 @@
                             <li class="nav-item dropdown me-2">
                                 <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                                     <i class="mdi mdi-email-open mx-0"></i>
-                                    <span class="count bg-danger">1</span>
+                                    <span class="count bg-danger"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                                    <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                                    <p class="mb-0 font-weight-normal float-left dropdown-header">Pesan</p>
+
+                                    @foreach($pesanUser as $pesan)
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-success">
-                                                <i class="mdi mdi-information mx-0"></i>
-                                            </div>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                Just now
-                                            </p>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item preview-item">
-                                        <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-warning">
-                                                <i class="mdi mdi-settings mx-0"></i>
-                                            </div>
-                                        </div>
-                                        <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                Private message
-                                            </p>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item preview-item">
-                                        <div class="preview-thumbnail">
-                                            <div class="preview-icon bg-info">
+                                            <div class="preview-icon bg-secondary">
                                                 <i class="mdi mdi-account-box mx-0"></i>
                                             </div>
                                         </div>
                                         <div class="preview-item-content">
-                                            <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                            <h6 class="preview-subject font-weight-normal">{{$pesan->nama}}</h6>
                                             <p class="font-weight-light small-text mb-0 text-muted">
-                                                2 days ago
+                                                {{$pesan->nama}}
                                             </p>
                                         </div>
                                     </a>
+                                    @endforeach
                                 </div>
                             </li>
                         </ul>
@@ -260,6 +237,8 @@
     <script src="{{asset('assets/admin/vendors/js/vendor.bundle.base.js')}}"></script>
     <script src="{{asset('assets/admin/vendors/chart.js/Chart.min.js')}}"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- main js -->
     <script src="{{asset('assets/admin/js/master/jquery.cookie.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets/admin/js/master/off-canvas.js')}}"></script>
@@ -339,6 +318,29 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        window.Echo.channel('booking-notif')
+            .listen('NotifikasiBooking', (e) => {
+            Swal.fire({
+                title: 'Booking Notification',
+                text: `${e.bookingData.nama} telah memesan kamar ${e.bookingData.kamar} dari ${e.bookingData.checkin} sampai ${e.bookingData.checkout}`,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+            });
+    </script>
+
+    <script>
+        window.Echo.channel('notif-pesan')
+            .listen('NotifikasiPesan', (e) => {
+            Swal.fire({
+                title: 'Message',
+                html: `<p> Ada Pesan dari ${e.notifPesan.nama} <p class="fw-bold">"${e.notifPesan.pesan}"</p></p>`,
+                icon: 'info'
+            });
+            });
     </script>
     @yield('script')
 </body>

@@ -10,14 +10,15 @@
             <thead>
                 <tr>
                     <th class="col-md-1 text-center">No</th>
-                    <th class="col-md-2 text-center">Kode</th>
+                    <th class="col-md-1 text-center">Kode</th>
                     <th class="col-md-1 text-center">Kamar</th>
                     <th class="col-md-2 text-center">Nama</th>
-                    <th class="col-md-1 text-center">Phone</th>
-                    <th class="col-md-1 text-center">Tanggal Pemesanan</th>
+                    <th class="col-md-1 text-center">Check In</th>
+                    <th class="col-md-1 text-center">Check Out</th>
+                    <th class="col-md-1 text-center">Jumlah Orang</th>
                     <th class="col-md-1 text-center">Total</th>
-                    <th class="col-md-2 text-center">Status</th>
-                    <th class="col-md-2 text-center">Status</th>
+                    <th class="col-md-1 text-center">Status</th>
+                    <th class="col-md-2 text-center">Aksi</th>
 
                 </tr>
             </thead>
@@ -25,7 +26,7 @@
     </div>
 
 
-    @foreach($riwayat as $item)
+    @foreach($pemesanan as $item)
     <div class="modal fade" id="detail{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -54,8 +55,8 @@
                                     </div>
                                     <div class="col">
                                         <h5>Informasi Pesanan</h5>
-                                        <p><strong>Kode Pemesanan:</strong> </p>
-                                        <p><strong>Tanggal Pemesanan:</strong> {{ $item->tanggal_pemesanan }}</p>
+                                        <p><strong>Kode Pemesanan: {{$item->kode}}</strong> </p>
+                                        <p><strong>Tanggal Pemesanan:</strong> {{ $item->tgl_pemesanan }}</p>
                                         <p><strong>Status:</strong> {{ $item->status }}</p>
                                     </div>
                                 </div>
@@ -63,14 +64,14 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5>Detail Kamar</h5>
-                                        <p><strong>Kategori Kamar:</strong> {{ $item->jenis_kamar }}</p>
-                                        <p><strong>Nomor Kamar:</strong> {{ $item->nama_kamar }}</p>
+                                        <p><strong>Kategori Kamar:</strong> {{ $item->kategori->nama }}</p>
+                                        <p><strong>Nomor Kamar:</strong> {{ $item->kamar->nama }}</p>
                                         <p><strong>Jumlah Orang:</strong> {{ $item->jumlah_orang }}</p>
                                     </div>
                                     <div class="col">
                                         <h5>Durasi Menginap</h5>
-                                        <p><strong>Check-in:</strong> {{ $item->tanggal_checkin }}</p>
-                                        <p><strong>Check-out:</strong> {{ $item->tanggal_checkout }}</p>
+                                        <p><strong>Check-in:</strong> {{ $item->in }}</p>
+                                        <p><strong>Check-out:</strong> {{ $item->out }}</p>
                                     </div>
                                 </div>
                                 <hr>

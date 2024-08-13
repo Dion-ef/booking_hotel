@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotifikasiBooking;
 use App\Models\Asset;
 use App\Models\Kamar;
 use App\Models\Kategori;
@@ -10,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PesananController extends Controller
@@ -23,7 +25,7 @@ class PesananController extends Controller
         // }
         // Mendapatkan tanggal saat ini
         $date = Carbon::now();
-    
+
         // Validasi data input
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
@@ -40,21 +42,21 @@ class PesananController extends Controller
             'min' => 'Minimal :attribute adalah :min.',
             'exists' => 'Kamar tidak ditemukan.',
         ]);
-    
+
         // Jika validasi gagal, kembalikan response dengan error
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-    
+
         // Mengecek kapasitas kamar
         $kamar = Kamar::find($request->kamar_id);
         if ($request->jumlah_orang > $kamar->kapasitas) {
-            return back()->withErrors(['jumlah_orang' => 'Jumlah orang maksimal pada kamar ini adalah '. $kamar->kapasitas])->withInput();
+            return back()->withErrors(['jumlah_orang' => 'Jumlah orang maksimal pada kamar ini adalah ' . $kamar->kapasitas])->withInput();
         }
 
         $data = Kategori::where('id', $kamar->kategori_id)->first();
 
-    
+
         // Menyimpan data pemesanan dengan eloquent
         $pemesanan = new Pemesanan();
         $pemesanan->kategori_id = $data->id;
@@ -70,14 +72,14 @@ class PesananController extends Controller
         $pemesanan->harga = $data->harga;
         $pemesanan->tgl_pemesanan = $date;
         $pemesanan->status = 'unpaid';
-    
+
         // Menghitung total biaya pemesanan
         $tanggal_in = Carbon::parse($request->Checkin);
         $tanggal_out = Carbon::parse($request->Checkout);
         $selisih_hari = $tanggal_out->diffInDays($tanggal_in);
         $pemesanan->total = $data->harga * $selisih_hari;
         $pemesanan->save();
-    
+
         // Mengubah status kamar menjadi 'dipakai'
         $kamar = Kamar::where('id', $request->kamar_id)->first();
         if ($kamar) {
@@ -87,14 +89,24 @@ class PesananController extends Controller
             return back()->withErrors('Kamar tidak ditemukan');
         }
         
+        $bookingData = [
+            'nama' => $request->nama,
+            'kamar' => $kamar->nama,
+            'checkin' => $request->Checkin,
+            'checkout' => $request->Checkout,
+        ];
     
-        return redirect()->route('booking.confirm', ['id' => $pemesanan->id]);   
+        // Log data sebelum emit event    
+        event(new NotifikasiBooking($bookingData));
+
+        return redirect()->route('booking.confirm', ['id' => $pemesanan->id]);
     }
 
-    public function konfirmasi($id){
+    public function konfirmasi($id)
+    {
         $pemesanan = Pemesanan::findOrFail($id);
         $asset = Asset::all();
 
-        return view('user.konfirmasi', compact('pemesanan','asset'));
+        return view('user.konfirmasi', compact('pemesanan', 'asset'));
     }
 }

@@ -1,5 +1,9 @@
 @extends('layout.user')
 
+@section('link')
+    <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+@endSection
+
 @section('konten')
 <section class="site-hero overlay" data-stellar-background-ratio="0.5">
         <div class="container">
