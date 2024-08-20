@@ -7,10 +7,12 @@ use App\Models\Asset;
 use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
+use App\Models\Notifikasi;
 use App\Models\Pemesanan;
 use App\Models\PesanUser;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,60 +28,14 @@ class ResepsionisController extends Controller
         $totalKamarKosong = Kamar::where('status','kosong')->count();
         $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
         $totalBooking = Pemesanan::count();
+        $notifikasi = Notifikasi::where('status','belum dibaca')->orderBy('created_at', 'desc')->get();
+        $checkInHariIni = Pemesanan::whereDate('in', Carbon::today())->count();
         $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
-        $bookings = Riwayat::select(
-            DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
-            DB::raw('count(*) as count')
-        )->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))->get();
-
-        // Menyusun data dalam format yang sesuai untuk chart
-        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $bookingsData = array_fill(0, 12, 0);
-
-        foreach ($bookings as $booking) {
-            $monthIndex = (int) date('n', strtotime($booking->month));
-            $bookingsData[$monthIndex - 1] = $booking->count;
-        }
-
-        // Konversi data menjadi JSON
-        $bookingsJson = json_encode($bookingsData);
-        return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai','pesanUser'));
+        return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'asset','totalBooking','totalKamarTerpakai','pesanUser','checkInHariIni','notifikasi'));
     }
 
-    // public function profilUpdateResepsionis(Request $request)
-    // {
-    //     $user = $request->user();
-
-    // // Periksa jika pengguna tidak ada
-    // if (!$user) {
-    //     return back()->withErrors(['error' => 'Pengguna tidak terautentikasi.']);
-    // }
-
-    // // Validasi data request jika diperlukan
-    // $request->validate([
-    //     'name' => 'required|string|max:255',
-    //     'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-    //     'password' => 'nullable|string|min:8|confirmed', // Validasi password jika ada
-    // ]);
-
-    // // Data yang akan diperbarui
-    // $updateData = [
-    //     'name' => $request->name,
-    //     'email' => $request->email,
-    // ];
-
-    // // Jika ada password baru yang diberikan, hash dan tambahkan ke data update
-    // if ($request->filled('password')) {
-    //     $updateData['password'] = bcrypt($request->password);
-    // }
-
-    // // Perbarui data pengguna
-    // $user->update($updateData);
-
-    // // Redirect kembali dengan pesan sukses
-    // return back()->with('toast_success', 'Profil Berhasil diubah!');
-    // }
+   
 
 
     // Kamar
@@ -89,13 +45,14 @@ class ResepsionisController extends Controller
         $data = Admin::where('id', $user)->first();
         $kategori = Kategori::all();
         $asset = Asset::all();
+        $notifikasi = Notifikasi::where('status','belum dibaca')->orderBy('created_at', 'desc')->get();
         $pesanUser = PesanUser::limit(3)->get();
         $kamar = Kamar::all();
         $gambar = [];
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar','asset','pesanUser'));
+        return view('resepsionis.kamar', compact('data', 'kategori', 'kamar', 'gambar','asset','pesanUser','notifikasi'));
     }
     public function getKamarResepsionis(Request $request)
     {
@@ -121,8 +78,9 @@ class ResepsionisController extends Controller
         $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
         $kategori = Kategori::all();
+        $notifikasi = Notifikasi::where('status','belum dibaca')->orderBy('created_at', 'desc')->get();
         $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
-        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori','asset','pesanUser'));
+        return view('resepsionis.booking', compact('data', 'pemesanan', 'kamar', 'kategori','asset','pesanUser','notifikasi'));
     }
     public function getBookingResepsionis()
     {
@@ -172,8 +130,9 @@ class ResepsionisController extends Controller
         $data = Admin::where('id', $user)->first();
         $pemesanan = Pemesanan::with('kategori')->with('kamar')->orderBy('out', 'asc')->paginate(10);
         $asset = Asset::all();
+        $notifikasi = Notifikasi::where('status','belum dibaca')->orderBy('created_at', 'desc')->get();
         $pesanUser = PesanUser::limit(3)->get();
-        return view('resepsionis.riwayat', compact('data', 'pemesanan','asset','pesanUser'));
+        return view('resepsionis.riwayat', compact('data', 'pemesanan','asset','pesanUser','notifikasi'));
     }
     public function getRiwayatResepsionis()
     {
@@ -189,5 +148,13 @@ class ResepsionisController extends Controller
             ->rawColumns(['action'])
             ->make(true);
             // <i class="fa-solid fa-pen-to-square"></i>
+    }
+    public function hapusNotifResepsionis($id)
+    {
+        DB::table('notif_booking')->where('id', $id)->update([
+            'status' => 'dibaca',
+        ]); 
+
+        return redirect('/resepsionis/booking');
     }
 }

@@ -3,6 +3,7 @@
 use App\Events\NotifikasiBooking;
 use App\Events\NotifikasiPesan;
 use App\Http\Controllers\UserController;
+use App\Models\Notifikasi;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -83,10 +84,13 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::post('/tambah/leadership', [App\Http\Controllers\AdminController::class, 'tambahLeadership']);
     Route::get('/leadership/get', [App\Http\Controllers\AdminController::class, 'getLeadership'])->name('admin.leadership.data');
     Route::post('/update/leadership', [App\Http\Controllers\AdminController::class, 'updateLeadership']);
+    Route::get('/hapus/leadership/{id}', [App\Http\Controllers\AdminController::class, 'hapusLeadership']);
+
+    Route::get('/hapus/notifikasi/{id}', [App\Http\Controllers\AdminController::class, 'hapusNotifAdmin']);
 
     // chart
-    Route::get('/chart/riwayat', [App\Http\Controllers\ChartController::class, 'chartRiwayat']);
-    Route::get('/chart/user', [App\Http\Controllers\ChartController::class, 'chartUserAktive']);
+    // Route::get('/chart/riwayat', [App\Http\Controllers\ChartController::class, 'chartRiwayat']);
+    // Route::get('/chart/user', [App\Http\Controllers\ChartController::class, 'chartUserAktive']);
 });
 
 
@@ -104,6 +108,8 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::get('/cek-ketersediaan', [UserController::class, 'cekKetersediaan'])->name('cek-ketersediaan');
     Route::get('/user/detail/{id}', [App\Http\Controllers\UserController::class, 'detail'])->middleware('auth');
     Route::post('/pesan', [App\Http\Controllers\UserController::class, 'pesan'])->middleware('auth');
+    Route::post('/user/review', [App\Http\Controllers\UserController::class, 'reviewStore'])->middleware('auth')->name('review.store');
+
 });
 
 // Resepsionis
@@ -118,16 +124,41 @@ Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], functio
     Route::get('/checkout/booking/{id}', [App\Http\Controllers\ResepsionisController::class, 'checkoutBookingResepsionis']);
     Route::get('/resepsionis/riwayat', [App\Http\Controllers\ResepsionisController::class, 'riwayatResepsionis']);
     Route::get('/resepsionis/riwayat/get', [App\Http\Controllers\ResepsionisController::class, 'getRiwayatResepsionis'])->name('resepsionis.riwayat.data');
+    Route::get('/hapus/notifikasi/resepsionis/{id}', [App\Http\Controllers\ResepsionisController::class, 'hapusNotifResepsionis']);
+    
+
 });
 
-// test pusher
-Route::get('/send-event', function(){
-    $notifPesan = [
-        'nama' => 'John',
-        'pesan' => 'Haii aku john',
-    ];
-    event(new NotifikasiPesan($notifPesan));
+// chart
+Route::get('/chart/kamar', [App\Http\Controllers\ChartController::class, 'kamarFavorit']);
+Route::get('/chart/booking', [App\Http\Controllers\ChartController::class, 'totalBooking']);
 
-    return 'Event broadcasted!';
+// get notif
+Route::get('/get/notifikasi', [App\Http\Controllers\PesananController::class, 'getNotifikasi']);
+
+// test pusher
+Route::get('/tes', function(){
+    
+    Notifikasi::create([
+        'nama' => 'dion yy',
+        'kamar' => 'A6',
+        'checkin' => '2024-08-20',
+        'checkout' => '2024-08-19',
+        'status' => 'belum dibaca',
+    ]);
+    
+    $notifikasis = Notifikasi::where('status', 'belum dibaca')->orderBy('created_at', 'desc')->get();
+
+    foreach ($notifikasis as $notifikasi) {
+        broadcast(new NotifikasiBooking([
+            'id' => $notifikasi->id,
+            'nama' => $notifikasi->nama,
+            'kamar' => $notifikasi->kamar,
+            'checkin' => $notifikasi->checkin,
+            'checkout' => $notifikasi->checkout,
+        ]));
+    }
+
+    return 'Berhasil';
 });
 

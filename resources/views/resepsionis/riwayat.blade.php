@@ -81,6 +81,7 @@
                                         <p><strong>Total Biaya:</strong> Rp {{ number_format($item->total, 0, ',', '.') }}</p>
                                     </div>
                                 </div>
+                                
 
                                 <div class="modal-footer">
                                     <button class="btn btn-primary" onclick="window.print()">Print Nota</button>

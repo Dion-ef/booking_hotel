@@ -11,6 +11,7 @@ use App\Models\Kategori;
 use App\Models\Leadership;
 use App\Models\Pemesanan;
 use App\Models\PesanUser;
+use App\Models\Review;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class UserController extends Controller
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.index', compact('login', 'kategori', 'gambar', 'getgambar','asset'));
+        return view('user.index', compact('login', 'kategori', 'gambar', 'getgambar', 'asset'));
     }
 
     public function room()
@@ -46,7 +47,7 @@ class UserController extends Controller
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
             $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
         }
-        return view('user.room', compact('login', 'kategori', 'gambar', 'kamars','asset'));
+        return view('user.room', compact('login', 'kategori', 'gambar', 'kamars', 'asset'));
     }
     public function tentang()
     {
@@ -54,22 +55,25 @@ class UserController extends Controller
 
         $getgambar = DB::table('gambar')->limit(7)->get();
         $asset = Asset::all();
-        return view('user.tentang' , compact('getgambar','asset','leadership'));
+        return view('user.tentang', compact('getgambar', 'asset', 'leadership'));
     }
     public function kontak()
     {
         $asset = Asset::all();
-        return view('user.kontak',compact('asset'));
+        return view('user.kontak', compact('asset'));
     }
     public function riwayat()
     {
         $data = Pemesanan::with('kategori')->with('kamar')->where('user_id', Auth::user()->id)->paginate(10);
+        foreach ($data as $item) {
+            $item->selisih_hari = \Carbon\Carbon::parse($item->out)->diffInDays(\Carbon\Carbon::parse($item->in));
+        }
         $asset = Asset::all();
         $gambar = [];
         foreach ($data as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->kategori->id)->get();
         }
-        return view('user.riwayat', compact('data','asset','gambar'));
+        return view('user.riwayat', compact('data', 'asset', 'gambar'));
     }
     public function pemesanan($id)
     {
@@ -84,11 +88,11 @@ class UserController extends Controller
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.pemesanan',  compact('user', 'data', 'kamar', 'kategori', 'gambar','fasilitas','asset'));
+        return view('user.pemesanan',  compact('user', 'data', 'kamar', 'kategori', 'gambar', 'fasilitas', 'asset'));
     }
     public function pemesananFromKamar($id)
     {
-        $kamar = Kamar::where('id', $id)->get(); 
+        $kamar = Kamar::where('id', $id)->get();
         $data = $kamar->first()->kategori;
         $kategori = Kategori::all();
         $users = auth()->id();
@@ -99,7 +103,7 @@ class UserController extends Controller
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
 
-        return view('user.pemesanan', compact('data', 'kamar', 'user', 'gambar','asset'));
+        return view('user.pemesanan', compact('data', 'kamar', 'user', 'gambar', 'asset'));
     }
 
     public function cekKetersediaan(Request $request)
@@ -130,10 +134,11 @@ class UserController extends Controller
             ->get();
 
         // Mengembalikan hasil ke view
-        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang','asset'));
+        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang', 'asset'));
     }
 
-    public function detail($id){
+    public function detail($id)
+    {
         $data = Kategori::where('id', $id)->first();
         $kamar = Kamar::where('kategori_id', $data->id)->where('status', 'kosong')->get();
         $kategori = Kategori::all();
@@ -147,7 +152,7 @@ class UserController extends Controller
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
             $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
         }
-        return view('user.detail',compact('user', 'data', 'kamar', 'kategori', 'gambar','fasilitas','kamars','asset'));
+        return view('user.detail', compact('user', 'data', 'kamar', 'kategori', 'gambar', 'fasilitas', 'kamars', 'asset'));
     }
 
 
@@ -164,7 +169,7 @@ class UserController extends Controller
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
         }
-        return view('user.index', compact('kategori', 'gambar', 'getgambar','asset'));
+        return view('user.index', compact('kategori', 'gambar', 'getgambar', 'asset'));
     }
     public function roomGuest()
     {
@@ -175,16 +180,15 @@ class UserController extends Controller
         foreach ($kategori as $kat) {
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
             $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
-
         }
-        return view('user.room', compact('kategori', 'gambar','asset','kamars'));
+        return view('user.room', compact('kategori', 'gambar', 'asset', 'kamars'));
     }
     public function tentangGuest()
     {
         $leadership = Leadership::all();
         $asset = Asset::all();
         $getgambar = DB::table('gambar')->limit(7)->get();
-        return view('user.tentang', compact('getgambar','asset','leadership'));
+        return view('user.tentang', compact('getgambar', 'asset', 'leadership'));
     }
     public function kontakGuest()
     {
@@ -192,7 +196,8 @@ class UserController extends Controller
         return view('user.kontak', compact('asset'));
     }
 
-    public function detailGuest($id){
+    public function detailGuest($id)
+    {
         $data = Kategori::where('id', $id)->first();
         $kamar = Kamar::where('kategori_id', $data->id)->where('status', 'kosong')->get();
         $kategori = Kategori::all();
@@ -204,7 +209,7 @@ class UserController extends Controller
             $gambar[$kat->id] = Gambar::where('kategori_id', $kat->id)->get();
             $kamars[$kat->id] = Kamar::where('kategori_id', $kat->id)->where('status', 'kosong')->get();
         }
-        return view('user.detail',compact( 'data', 'kamar', 'kategori', 'gambar','fasilitas','kamars','asset'));
+        return view('user.detail', compact('data', 'kamar', 'kategori', 'gambar', 'fasilitas', 'kamars', 'asset'));
     }
 
     public function cekKetersediaanGuest(Request $request)
@@ -235,10 +240,11 @@ class UserController extends Controller
             ->get();
 
         // Mengembalikan hasil ke view
-        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang','asset'));
+        return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang', 'asset'));
     }
 
-    public function pesan(Request $request){
+    public function pesan(Request $request)
+    {
         $pesan = new PesanUser();
         $pesan->nama = $request->input('nama');
         $pesan->phone = $request->input('phone');
@@ -250,13 +256,14 @@ class UserController extends Controller
             'nama' => $request->nama,
             'pesan' => $request->pesan,
         ];
-    
+
         // Log data sebelum emit event    
         event(new NotifikasiPesan($notifPesan));
 
         return redirect()->back();
     }
-    public function pesanGuest(Request $request){
+    public function pesanGuest(Request $request)
+    {
 
         $pesan = new PesanUser();
         $pesan->nama = $request->input('nama');
@@ -269,9 +276,27 @@ class UserController extends Controller
             'nama' => $request->nama,
             'pesan' => $request->pesan,
         ];
-    
+
         // Log data sebelum emit event    
         event(new NotifikasiPesan($notifPesan));
+
+        return redirect()->back();
+    }
+
+    public function reviewStore(Request $request)
+    {
+        $request->validate([
+            'kamar_id' => 'required|exists:kamar,id',
+            'review' => 'required|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $review = new Review();
+        $review->users_id = auth()->id();
+        $review->kamar_id = $request->kamar_id;
+        $review->review = $request->input('review');
+        $review->rating = $request->input('rating');
+        $review->save();
 
         return redirect()->back();
     }

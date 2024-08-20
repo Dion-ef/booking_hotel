@@ -380,12 +380,27 @@
 }
 .chart-container{
     background-color: #fff;
+    padding: 20px;
     box-shadow:rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px ;
+}
+#kamarChart {
+    width: 100px;
+    height: 100px; 
+}
+#notifications-container {
+    max-height: 300px; 
+    overflow-y: auto; 
 }
 .chart-container-small{
     background-color: #fff;
     box-shadow:rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px ;
     width: 350px;
+}
+.card-titles{
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+    font-size: 18px;
 }
 
 /* Kamar */
@@ -432,6 +447,15 @@
     height: 120px;
     width: 260px;
     background-color: #5dae48;
+    margin: auto;
+    display: flex;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px;
+}
+.d-container-4{
+    height: 120px;
+    width: 260px;
+    background-color: #a4560c;
     margin: auto;
     display: flex;
     border-radius: 10px;
@@ -503,7 +527,23 @@
     box-shadow: rgb(228, 70, 13) 0px 5px 15px;
     position: relative;
 }
+.child-4-container{
+    height: 60px;
+    width: 60px;
+    background-color: rgb(64, 0, 79);
+    top: 25%;
+    left: 60%;
+    border-radius: 5px;
+    box-shadow: rgb(64, 0, 79) 0px 5px 15px;
+    position: relative;
+}
 .child-3-container i{
+    margin-top: 18px;
+    margin-left: 17px;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+.child-4-container i{
     margin-top: 18px;
     margin-left: 17px;
     font-size: 25px;

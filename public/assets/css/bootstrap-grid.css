@@ -44,6 +44,18 @@ html {
   margin-right: auto;
   box-sizing: border-box;
   margin-left: auto;
+  display: flex;
+  justify-content: space-between;
+ }
+ .container-fluid .row{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
  }
  
 

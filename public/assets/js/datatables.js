@@ -287,48 +287,48 @@ $(document).ready(function() {
         });
     });
 
-    // $('#booking-table').on('click', '.delete-button', function (event) {
-    //     event.preventDefault();
-    //     const id= $(this).data('id');
+    $('#booking-table').on('click', '.delete-button', function (event) {
+        event.preventDefault();
+        const id= $(this).data('id');
 
-    //     Swal.fire({
-    //         title: 'Apakah Anda yakin ingin checkout?',
-    //         text: "Anda tidak akan bisa mengembalikannya!",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Ya, Checkout!',
-    //         cancelButtonText: 'Tidak, batalkan!'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             // Ambil token CSRF dari meta tag
-    //             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        Swal.fire({
+            title: 'Apakah Anda yakin ingin checkout?',
+            text: "Anda tidak akan bisa mengembalikannya!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Checkout!',
+            cancelButtonText: 'Tidak, batalkan!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Ambil token CSRF dari meta tag
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    //             // Jika dikonfirmasi, submit form untuk menghapus kamar
-    //             const form = document.createElement('form');
-    //             form.action = `/hapus/booking/`+ id;
-    //             form.method = 'POST';
+                // Jika dikonfirmasi, submit form untuk menghapus kamar
+                const form = document.createElement('form');
+                form.action = `/hapus/booking/`+ id;
+                form.method = 'POST';
 
-    //             // Tambahkan token CSRF ke dalam form
-    //             const csrfInput = document.createElement('input');
-    //             csrfInput.type = 'hidden';
-    //             csrfInput.name = '_token';
-    //             csrfInput.value = token;
-    //             form.appendChild(csrfInput);
+                // Tambahkan token CSRF ke dalam form
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = token;
+                form.appendChild(csrfInput);
 
-    //             // Tambahkan metode delete ke dalam form
-    //             const methodInput = document.createElement('input');
-    //             methodInput.type = 'hidden';
-    //             methodInput.name = '_method';
-    //             methodInput.value = 'GET';
-    //             form.appendChild(methodInput);
+                // Tambahkan metode delete ke dalam form
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'GET';
+                form.appendChild(methodInput);
 
-    //             document.body.appendChild(form);
-    //             form.submit();
-    //         }
-    //     });
-    // });
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    });
 });
 
 

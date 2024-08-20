@@ -9,10 +9,12 @@ use App\Models\Gambar;
 use App\Models\Kamar;
 use App\Models\Kategori;
 use App\Models\Leadership;
+use App\Models\Notifikasi;
 use App\Models\Pemesanan;
 use App\Models\PesanUser;
 use App\Models\Riwayat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -25,29 +27,13 @@ class AdminController extends Controller
     {
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
-        $totalKamarKosong = Kamar::where('status','kosong')->count();
-        $totalKamarTerpakai = Kamar::where('status','dipakai')->count();
+        $totalKamarKosong = Kamar::where('status', 'kosong')->count();
+        $totalKamarTerpakai = Kamar::where('status', 'dipakai')->count();
         $totalBooking = Pemesanan::count();
         $pesanUser = PesanUser::limit(3)->get();
+        $checkInHariIni = Pemesanan::whereDate('in', Carbon::today())->count();
         $asset = Asset::all();
-        $bookings = Pemesanan::where('status','selesai')->select(
-            DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
-            DB::raw('count(*) as count')
-        )->groupBy(DB::raw('DATE_TRUNC(\'month\', created_at)'))->get();
-
-        // Menyusun data dalam format yang sesuai untuk chart
-        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $bookingsData = array_fill(0, 12, 0);
-
-        foreach ($bookings as $booking) {
-            $monthIndex = (int) date('n', strtotime($booking->month));
-            $bookingsData[$monthIndex - 1] = $booking->count;
-        }
-
-        // Konversi data menjadi JSON
-        $bookingsJson = json_encode($bookingsData);
-
-        return view('admin.dashboard', compact('data', 'totalKamarKosong', 'bookingsJson', 'months', 'asset','totalBooking','totalKamarTerpakai','pesanUser'));
+        return view('admin.dashboard', compact('data', 'totalKamarKosong', 'asset', 'totalBooking', 'totalKamarTerpakai', 'pesanUser', 'checkInHariIni'));
     }
 
     // update Profil
@@ -70,7 +56,7 @@ class AdminController extends Controller
         $kategori = Kategori::all();
         $asset = Asset::all();
         $pesanUser = PesanUser::limit('3');
-        return view('admin.kamar', compact('data', 'kategori', 'asset','pesanUser'));
+        return view('admin.kamar', compact('data', 'kategori', 'asset', 'pesanUser'));
     }
     public function getKamar(Request $request)
     {
@@ -192,6 +178,7 @@ class AdminController extends Controller
             'nama' => 'required',
             'harga' => 'required|numeric',
             'fasilitas' => 'required|array',
+            'deskripsi' => 'required',
 
         ]);
 
@@ -199,6 +186,7 @@ class AdminController extends Controller
         $kategori = Kategori::create([
             'nama' => $request->nama,
             'harga' => $request->harga,
+            'deskripsi' => $request->deskripsi
 
         ]);
 
@@ -279,7 +267,7 @@ class AdminController extends Controller
     }
     public function getBooking()
     {
-        $bookings = Pemesanan::with('kamar')->whereIn('status',['paid', 'unpaid'])->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
+        $bookings = Pemesanan::with('kamar')->whereIn('status', ['paid', 'unpaid'])->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']); //select digunakan untuk mengambil beberapa seperti disamping contohnya jika tidak diberi select maka akan diambil semua
 
         return DataTables::of($bookings)
             ->addIndexColumn()
@@ -288,7 +276,7 @@ class AdminController extends Controller
                 <a class="btn btn-primary btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
                 <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#edit' . $row->id . '"> Edit</a>
                 <br>
-                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1"><i class="fa-solid fa-xmark" aria-hidden="true" data-id="' . $row->id . '"></i> Check Out</a>
+                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1" data-id="' . $row->id . '"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
             ';
             })
             ->rawColumns(['action'])
@@ -330,7 +318,7 @@ class AdminController extends Controller
         }
 
         // Simpan data pemesanan ke dalam tabel riwayat dengan query builder
-        DB::table('pemesanan')->update([
+        DB::table('pemesanan')->where('id', $id)->update([
             'status' => 'selesai',
         ]);
 
@@ -359,7 +347,7 @@ class AdminController extends Controller
     }
     public function getRiwayat()
     {
-        $bookings = Pemesanan::with('kamar')->with('kategori')->where('status','selesai')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']);
+        $bookings = Pemesanan::with('kamar')->with('kategori')->where('status', 'selesai')->select(['id', 'kode', 'kamar_id', 'nama', 'in', 'out', 'jumlah_orang', 'total', 'status']);
 
         return DataTables::of($bookings)
             ->addIndexColumn()
@@ -586,6 +574,7 @@ class AdminController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editLeadership' . $row->id . '"> Edit</a>';
                     $btn .= ' <a  class="btn btn-primary btn-sm btn-action mt-1" data-bs-toggle="modal" data-bs-target="#detailLeadership' . $row->id . '"> Detail</a>';
+                    $btn .= ' <a href="/hapus/leadership/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1" data-id="' . $row->id . '"> Hapus</a>';
                     return $btn;
                 })
                 ->rawColumns(['gambar', 'action'])
@@ -612,4 +601,28 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Leadership berhasil diupdate');
     }
+    public function hapusLeadership($id)
+    {
+        DB::table('leadership')->where('id', $id)->delete();
+        Alert::success('Dihapus', 'leadership Berhasil Dihapus!');
+
+        return redirect()->back();
+    }
+
+
+    // hapus notif
+    public function hapusNotifAdmin($id)
+    {
+        DB::table('notif_booking')->where('id', $id)->update([
+            'status' => 'dibaca',
+        ]);
+
+
+        return redirect('/booking/admin');
+
+        // DB::table('notif_booking')->where('id', $id)->update(['status' => 'dibaca']);
+
+        // return response()->json(['success' => true]);
+    }
+
 }

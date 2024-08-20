@@ -6,6 +6,7 @@ use App\Events\NotifikasiBooking;
 use App\Models\Asset;
 use App\Models\Kamar;
 use App\Models\Kategori;
+use App\Models\Notifikasi;
 use App\Models\Pemesanan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -89,15 +90,25 @@ class PesananController extends Controller
             return back()->withErrors('Kamar tidak ditemukan');
         }
         
-        $bookingData = [
+        Notifikasi::create([
             'nama' => $request->nama,
             'kamar' => $kamar->nama,
             'checkin' => $request->Checkin,
             'checkout' => $request->Checkout,
-        ];
+            'status' => 'belum dibaca',
+        ]);
+        $notifikasis = Notifikasi::where('status', 'belum dibaca')->orderBy('created_at', 'desc')->get();
+
+        foreach ($notifikasis as $notifikasi) {
+            broadcast(new NotifikasiBooking([
+                'id' => $notifikasi->id,
+                'nama' => $notifikasi->nama,
+                'kamar' => $notifikasi->kamar,
+                'checkin' => $notifikasi->checkin,
+                'checkout' => $notifikasi->checkout,
+            ]));
+        }
     
-        // Log data sebelum emit event    
-        event(new NotifikasiBooking($bookingData));
 
         return redirect()->route('booking.confirm', ['id' => $pemesanan->id]);
     }
@@ -108,5 +119,13 @@ class PesananController extends Controller
         $asset = Asset::all();
 
         return view('user.konfirmasi', compact('pemesanan', 'asset'));
+    }
+    public function getNotifikasi()
+    {
+        $notifikasi = Notifikasi::where('status', 'belum dibaca')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['notifikasi' => $notifikasi]);
     }
 }

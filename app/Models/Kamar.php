@@ -12,7 +12,7 @@ class Kamar extends Model
 {
     use HasFactory;
     protected $table = "kamar";
-    protected $guarded =[];
+    protected $guarded = [];
     protected $fillable = [
         'kategori_id',
         'nama',
@@ -25,5 +25,8 @@ class Kamar extends Model
     {
         return $this->belongsTo('App\Models\Kategori');
     }
-
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

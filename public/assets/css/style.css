@@ -93,6 +93,7 @@ textarea.form-control {
   -webkit-transition: .2s all ease-in-out;
   -o-transition: .2s all ease-in-out;
   transition: .2s all ease-in-out; }
+
   .site-header.scrolled {
     padding: 20px 0;
     background: #fff;
@@ -100,14 +101,19 @@ textarea.form-control {
     box-shadow: 0 5px 20px -5px rgba(0, 0, 0, 0.1); }
     .site-header.scrolled .site-menu-toggle {
       top: 10px;
-      position: relative; }
+      position: relative;
+     }
+
       .site-header.scrolled .site-menu-toggle span {
-        background: #000; }
-    .site-header.scrolled .site-logo {
+        background: #000;
+       }
+    .site-headersite-header.scrolled .site-logo {
       position: relative;
       z-index: 100; }
       .site-header.scrolled .site-logo a {
         color: #000; }
+
+
 
 .menu-open {
   position: relative; }
@@ -147,13 +153,14 @@ textarea.form-control {
   min-height: 300px;
   overflow-y: scroll; }
   .site-navbar nav {
-    text-align: left; }
+    text-align: left;
+   }
     .site-navbar nav .menu {
       font-family: "Playfair Display", times, serif;
      }
       .site-navbar nav .menu li a {
         color: #000;
-        font-size: 40px;
+        font-size: 35px;
         padding: 5px 10px;
         position: relative;
         text-decoration: none;
@@ -260,7 +267,36 @@ textarea.form-control {
   min-height: 500px; }
 
 .menu-open .site-menu-toggle span {
-  background: #000; }
+  background: #000; 
+}
+.site-menu-toggle i{
+  font-size: 30px;
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  color: #fff;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+ }
+.menu-open .site-menu-toggle i {
+  font-size: 30px;
+  color: #000000;
+}
+.site-header.scrolled .site-menu-toggle i{
+  font-size: 30px;
+  color: #000000;
+ }
 
 .site-menu-toggle {
   top: 0;
@@ -298,7 +334,8 @@ textarea.form-control {
     -webkit-transition: .25s ease-in-out;
     -moz-transition: .25s ease-in-out;
     -o-transition: .25s ease-in-out;
-    transition: .25s ease-in-out; }
+    transition: .25s ease-in-out;
+   }
   .site-menu-toggle span:nth-child(1) {
     top: 0px; }
   .site-menu-toggle span:nth-child(2) {
@@ -1096,10 +1133,25 @@ textarea.form-control {
 .text-black {
   color: #000 !important; }
 
-.check-availabilty {
+
+.cek-section{
+  padding-bottom: 0;
+}
+.cek-section .check-availabilty {
+  margin-top: -170px;
+  position: relative;
+ }
+  .cek-section .check-availabilty .block-32 {
+    background: #fff;
+    border-radius: 10px; }
+
+.cek-section.scrolled{
+  background-color: #000000;
+}
+.cek-section.scrolled .check-availabilty {
   margin-top: -170px;
   position: relative; }
-  .check-availabilty .block-32 {
+  .cek-section.scrolled .check-availabilty .block-32 {
     background: #fff;
     border-radius: 10px; }
 
@@ -1561,4 +1613,107 @@ textarea.form-control {
   font-weight: 700;
   color: #797575;
  font-family: "Montserrat", sans-serif;
+}
+
+.rating {
+  display: flex;
+  direction: rtl;
+  justify-content: left;
+}
+
+.rating input{
+  display: none;
+}
+.rating label{
+  font-size: 2rem;
+  color: #444;
+
+}
+.rating input:not(:checked)~label:hover,
+.rating input:not(:checked)~label:hover~label{
+  color: #fd4;
+}
+.rating input:checked~label{
+  color: #fd4;
+}
+.checkin-container{
+  height: 4rem;
+  margin-top: 10px;
+  width: 8rem;
+  border: 1px solid #adabab;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.checkin-container p{
+  font-size: 12px;
+  text-align: center;
+  color: #7c7272;
+  margin-bottom: 0;
+  margin-top: 5px;
+  font-weight: 400;
+}
+.check-container{
+  height: 8rem;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.selisih-hari{
+  display: inline-block;
+  border-bottom: 1px solid #908989;
+  width: 50%;
+  text-align: center;
+  position: relative;
+  color:#7c7272 ;
+  font-size: 13px;
+  font-weight: 400;
+  margin: auto;
+}
+.kamar-detail h1{
+  font-size: 18px;
+  font-weight: 700;
+}
+.kamar-detail p{
+  font-size: 14px;
+  font-weight: 400;
+}
+.kode-pesanan{
+  width: 100%;
+  display: flex;
+  bottom: 0;
+  justify-content: space-between;
+
+}
+.kode-pesanan p{
+  font-size: 14px;
+  font-weight: bold;
+}
+.tgl-pesanan{
+  width: 100%;
+  display: flex;
+  top: 0;
+  justify-content: space-between;
+}
+.tgl-pesanan p{
+  font-size: 14px;
+}
+.total-price{
+  justify-content: space-between;
+  display: flex;
+  padding-top: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(0.3rem - 1px);
+  border-bottom-left-radius: calc(0.3rem - 1px);
+}
+.total-price p{
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+.total-price h1{
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffba5a;
 }

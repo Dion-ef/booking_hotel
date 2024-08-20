@@ -3,12 +3,12 @@
 @section('konten')
 
 <div class=" container p-3 bg-body rounded shadow-xl">
-
-    <!-- <div class="search-container">
+<!-- 
+    <div class="search-container">
         <div class="row justify-content-between">
             <div class="col-md-9">
                 <div class="pb-4">
-                    <a class="btn btn-primary r-btn" data-bs-toggle="modal" data-bs-target="#tambahKamar" data-aos="fade">+Tambah Kamar</a>
+                    <a class="btn btn-primary r-btn" data-bs-toggle="modal" data-bs-target="#tambahKamar" data-aos="fade">+Tambah Asset</a>
 
                     <div class="modal fade" id="tambahKamar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -71,7 +71,6 @@
 
 
     <div class="">
-        <p class="header-table">Asset</p>
         <table class="table table-striped table-bordered text-center" id="asset-table" data-url="{{route('admin.asset.data')}}">
             <thead>
                 <tr>

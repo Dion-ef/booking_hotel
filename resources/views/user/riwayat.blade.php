@@ -23,10 +23,10 @@
     <div class="container">
 
         <div class="check-availabilty" id="next">
-            <div class="block-32 table-responsive" data-aos="fade-up" data-aos-offset="-200">
+            <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
 
                 @if($data->count())
-                <table class="table table-striped" data-aos="fade-up">
+                <table class="table table-striped table-responsive" data-aos="fade-up">
                     <thead>
                         <tr>
                             <th><strong>Nama Kamar</strong></th>
@@ -52,10 +52,16 @@
                                 <a href="" class="btn btn-warning btn-sm" data-aos="fade-up">Bayar Sekarang</a>
                                 @endif
                                 <a class="btn btn-info btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#detail{{$item->id}}">Detail</a>
-                                <a class="btn btn-danger btn-sm btn-action" data-aos="fade-up">Review</a>
+                                <!-- dilakukan pengecekan apakah user yang user_idnya sudah melakukan review pada kamar tertentu atau belum jika sudah maka tombol tidak akan ditampilkan dan juga sebaliknya -->
+                                 <!-- exists digunakan untuk mengecek apakah ada review yang sudah dibuat user tersebut yang cocok dari query tersebut, jika ada maka hasilnya tru dan sebaliknya -->
+                                @if(!$item->kamar->reviews()->where('users_id', Auth::user()->id)->exists()) 
+                                <a class="btn btn-danger btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#review{{$item->id}}">Review</a>
+                                @endif
+
                             </td>
                         </tr>
                         @endforeach
+
                     </tbody>
                 </table>
 
@@ -82,17 +88,9 @@
             </div>
             <div class="modal-body text-start">
                 <div class="container-booking">
-                    <h1 class="text-center">Riwayat Pemesanan</h1>
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col text-center">
-                                    <h3>Pama Hotel</h3>
-                                    <p class="text-align-center">Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan, <br>Kec.Tulungagung, Kabupaten Tulungagung<br>Telepon: 0123-456789</p>
-                                </div>
-                            </div>
                             <div class="room">
-
                                 <div class="pemesanan-container">
                                     <div class="home-sliders major-carousel owl-carousel mb-5" data-aos="fade-down" data-aos-delay="100">
                                         @if (isset($gambar[$item->id]))
@@ -100,47 +98,49 @@
                                         <div class="slider-item">
                                             <img src="{{ asset('storage/' . $img->gambar) }}" alt="Gambar Kategori" class="fixed-height-img-pemesanan">
                                         </div>
-                                        
+
                                         @endforeach
                                         @endif
                                     </div>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col">
-                                    <h5>Informasi Pemesan</h5>
-                                    <p><strong>Nama:</strong> {{ $item->nama }}</p>
-                                    <p><strong>Email:</strong> {{ $item->email }}</p>
-                                    <p><strong>Telepon:</strong> {{ $item->phone }}</p>
+
+                            <div class="check-container">
+                                <div class="checkin-container text-center">
+                                    <p>Check-In</p>
+                                    {{$item->in}}
                                 </div>
-                                <div class="col">
-                                    <h5>Informasi Pesanan</h5>
-                                    <p><strong>Kode Pemesanan: {{$item->kode}}</strong> </p>
-                                    <p><strong>Tanggal Pemesanan:</strong> {{ $item->tgl_pemesanan }}</p>
-                                    <p><strong>Status:</strong> {{ $item->status }}</p>
+                                <div class="selisih-hari">
+                                    {{$item->selisih_hari}} Hari
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col">
-                                    <h5>Detail Kamar</h5>
-                                    <p><strong>Kategori Kamar:</strong> {{ $item->kategori->nama }}</p>
-                                    <p><strong>Nomor Kamar:</strong> {{ $item->kamar->nama }}</p>
-                                    <p><strong>Jumlah Orang:</strong> {{ $item->jumlah_orang }}</p>
-                                </div>
-                                <div class="col">
-                                    <h5>Durasi Menginap</h5>
-                                    <p><strong>Check-in:</strong> {{ $item->in }}</p>
-                                    <p><strong>Check-out:</strong> {{ $item->out }}</p>
+                                <div class="checkin-container text-center">
+                                    <p>Check-Out</p>
+                                    {{$item->out}}
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col">
-                                    <h5>Rincian Biaya</h5>
-                                    <p><strong>Total Biaya:</strong> Rp {{ number_format($item->total, 0, ',', '.') }}</p>
-                                </div>
+
+                            <div class="kamar-detail">
+                                <h1>Kamar {{$item->kamar->nama}}</h1>
+                                <p><i class="fa-regular fa-user"></i> {{$item->jumlah_orang}} orang</p>
+                                <p><i class="fa-regular fa-window-maximize"></i> {{$item->kategori->nama}}</p>
+                            </div>
+
+                            <div class="kode-pesanan">
+                                <p>Kode Booking</p>
+                                <p>{{$item->kode}}</p>
+                            </div>
+                            <div class="tgl-pesanan">
+                                <p>Tanggal Pemesanan</p>
+                                <p>{{$item->tgl_pemesanan}}</p>
+                            </div>
+                            <div class="kode-pesanan">
+                                <p>Status</p>
+                                <p class="text-danger">{{$item->status}}</p>
+                            </div>
+
+                            <div class="total-price">
+                                <p><i class="fa-regular fa-newspaper"></i> Total Price</p>
+                                <h1>Rp. {{number_format($item->total)}}</h1>
                             </div>
 
                             <div class="modal-footer">
@@ -160,5 +160,49 @@
     </div>
 </div>
 @endforeach
+
+
+@foreach($data as $item)
+<div class="modal fade" id="review{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-start">
+                <form action="{{ route('review.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="kamar_id" value="{{ $item->kamar->id }}">
+
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        <textarea name="review" id="review" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating">Rating:</label>
+                        <div class="rating">
+                            @for ($i = 1; $i
+                            <= 5; $i++)
+                                <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $item->id }}-{{ $i }}" />
+                            <label for="rating{{ $item->id }}-{{ $i }}">★</label>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@endforeach
+
+
+
 
 @endSection

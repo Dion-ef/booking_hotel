@@ -6,21 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   /**
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('notif_booking', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('users_id');
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('kamar_id');
-            $table->foreign('kamar_id')->references('id')->on('kamar')->onDelete('cascade');
-            $table->text('review');
-            $table->integer('rating');
+            $table->string('nama');
+            $table->string('kamar');
+            $table->date('checkin');
+            $table->date('checkout');
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -32,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('notif_booking', function (Blueprint $table) {
             $table->dropTimestamps();
         });
     }

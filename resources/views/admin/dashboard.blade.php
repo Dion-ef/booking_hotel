@@ -6,10 +6,10 @@
 @endSection
 @section('konten')
 <!-- bisa pakai class data dan hapus col -->
- 
-<div class="row mb-5 mt-5"> 
 
-    <div class="col-md-4">
+<div class="row mb-5 mt-5">
+
+    <div class="col-md-3">
         <div class="d-container-2">
             <div class="row">
                 <div class="col-md-6">
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="d-container-1">
             <div class="row">
                 <div class="col-md-6">
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="d-container-3">
             <div class="row">
                 <div class="col-md-6">
@@ -62,6 +62,24 @@
         </div>
     </div>
 
+    <div class="col-md-3">
+        <div class="d-container-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-col-container">
+                        <h6>{{$checkInHariIni}}</h6>
+                        <p>Tamu Check-In Hari Ini</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="child-4-container">
+                        <i class="fa fa-user sidebar-icon" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 </div>
@@ -70,17 +88,20 @@
 <div class="chart">
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div id="chartData" data-months="{{ json_encode($months) }}" data-bookings="{{ $bookingsJson }}">
-            </div>
-
             <div class="chart-container">
-                <h6>total booking perbulan</h6>
-                <canvas id="booking-chart" width="400" height="200"></canvas>
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <p class="card-titles fw-bold mb-5">Total Booking Dalam Satu Bulan</p>
+                </div>
+
+                <canvas id="booking-chart"  height="200"></canvas>
             </div>
         </div>
         <div class="col-md-6 mb-4">
             <div class="chart-container">
-                <canvas id="riwayat-chart"></canvas>
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <p class="card-titles fw-bold mb-5">Kamar Favorit</p>
+                </div>
+                <canvas id="kamarChart" height="200"></canvas>
             </div>
         </div>
         <!-- <div class="col-md-6 mb-4">
@@ -102,9 +123,12 @@
     </div>
 
 </div>
+
+
 @endSection
 @section('script')
 
 <script src="{{asset('assets/js/chartku.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @endSection

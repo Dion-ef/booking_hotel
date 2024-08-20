@@ -10,11 +10,13 @@
 
     <link rel="stylesheet" href="{{asset('assets/css/animate.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
+    
     <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/aos.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datepicker.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/jquery.timepicker.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/fancybox.min.css')}}">
+    <link href="{{asset('font/css/all.min.css')}}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{asset('fonts/ionicons/css/ionicons.min.css')}}">
     <link rel="stylesheet" href="{{asset('fonts/fontawesome/css/font-awesome.min.css')}}">
@@ -30,15 +32,16 @@
                 @foreach($asset as $item)
                 <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="/index">{{$item->nama_hotel}}</a></div>
                 @endforeach
+                <!-- <div class="col-lg-4 text-center">
+                    <p>MMM</p>
+                </div> -->
                 <div class="col-6 col-lg-8">
 
                     <!-- <button class="btn-login">Login</button> -->
                     <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade">
-
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <i class="fa fa-bars"></i>
                     </div>
+                    
 
 
                     <div class="site-navbar js-site-navbar">
@@ -76,19 +79,6 @@
     @yield('konten')
 
 
-    <!-- 
-    <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 col-md-6 text-center mb-4 mb-md-0 text-md-left" data-aos="fade-up">
-                    <h2 class="text-white font-weight-bold">Tempat Terbaik Untuk Tinggal Bersama Keluarga Anda. Reservasi Sekarang!</h2>
-                </div>
-                <div class="col-12 col-md-6 text-center text-md-right" data-aos="fade-up" data-aos-delay="200">
-                    <a href="/user/reservasi" class="btn btn-outline-white-primary py-3 text-white px-5">Reservasi Sekarang</a>
-                </div>
-            </div>
-        </div>
-    </section> -->
     <footer class="section footer-section">
         <div class="container">
             <div class="row mb-4">
@@ -101,7 +91,6 @@
                 </div>
                 <div class="col-md-3 mb-5 pr-md-5 contact-info">
                     @foreach($asset as $item)
-                    <!-- <li>198 West 21th Street, <br> Suite 721 New York NY 10016</li> -->
                     <p><span class="d-block"><span class="ion-ios-location h5 mr-3 text-primary"></span>Address:</span> <span> {{$item->alamat}}</span></p>
                     <p><span class="d-block"><span class="ion-ios-telephone h5 mr-3 text-primary"></span>Phone:</span> <span> {{$item->phone}}</span></p>
                     <p><span class="d-block"><span class="ion-ios-email h5 mr-3 text-primary"></span>Email:</span> <span> {{$item->email}}</span></p>
@@ -109,19 +98,7 @@
                 </div>
             </div>
             <div class="row pt-5">
-                <!-- <p class="col-md-6 text-left">
-                    Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0.
-                    Copyright &copy;<script>
-                        document.write(new Date().getFullYear());
-                    </script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. 
-                </p> -->
 
-                <p class="col-md-6 text-right social">
-                    <a href="#"><span class="fa fa-facebook"></span></a>
-                    <a href="#"><span class="fa fa-twitter"></span></a>
-                    <a href="#"><span class="fa fa-linkedin"></span></a>
-                </p>
             </div>
         </div>
     </footer>

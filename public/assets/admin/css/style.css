@@ -22240,13 +22240,19 @@ dl li {
 
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .count-indicator .count {
   position: absolute;
-  left: 65%;
-  width: 13px;
-  height: 13px;
-  border-radius: 10px;
-  top: 4px;
-  font-size: 10px;
-  line-height: 21px;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  top: 1px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: normal;
+  background-color: #dc3545;
+  color: #fff;
+  transform: translateX(-50%);
 }
 
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .count-indicator:after {
@@ -22470,6 +22476,28 @@ dl li {
 .deskripsi-text{
   text-align: justify;
 }
+.name-hotel{
+  font-size: 27px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 900;
+  background: linear-gradient(-45deg, #000,#ddd,#0198e8,#00d082,#00422a,#ddd);
+  color: transparent;
+  background-size: 400% 400%;
+  background-clip: text;
+  animation: gradient 5s ease infinite;
+}
+@keyframes gradient {
+  0%{
+    background-position: 0% 50%;
+  }
+  50%{
+    background-position: 100% 50%;
+  }
+  100%{
+    background-position: 0% 50%;
+  }
+}
+
 /* Custom styles for SweetAlert */
 
 

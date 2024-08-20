@@ -19,10 +19,16 @@ class AdminTableSeeder extends Seeder
     {
         DB::table('admins')->insert([
             [
-                'name' => 'Muhammad Riski',
-                'email' => 'riski@gmail.com',
-                'password' => Hash::make('riski45'),
+                'name' => 'Dion Eka Fahrezi',
+                'email' => 'admin1@gmail.com',
+                'password' => Hash::make('admin1'),
                 'role'=>'admin'
+            ],
+            [
+                'name' => 'Muhammad Riski',
+                'email' => 'resepsionis1@gmail.com',
+                'password' => Hash::make('resepsionis1'),
+                'role'=>'resepsionis'
             ],
             // Tambahkan data admin lain jika diperlukan
         ]);

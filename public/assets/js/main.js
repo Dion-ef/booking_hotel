@@ -182,6 +182,21 @@
   };
   windowScroll();
 
+  var windowScroll = function() {
+
+    $(window).scroll(function(){
+      var $win = $(window);
+      if ($win.scrollTop() > 200) {
+        $('.js-cek').addClass('scrolled');
+      } else {
+        $('.js-cek').removeClass('scrolled');
+      }
+
+    });
+
+  };
+  windowScroll();
+
 
   var goToTop = function() {
 
