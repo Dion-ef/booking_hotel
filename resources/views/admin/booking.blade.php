@@ -85,7 +85,7 @@
                                 <hr>
                                 <div class="row mt-4 booking-btn">
                                     <div class="modal-footer">
-                                        <button class="btn btn-primary" onclick="window.print()">Print Nota</button>
+                                        <!-- <button class="btn btn-primary" onclick="window.print()">Print Nota</button> -->
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keluar</button>
                                     </div>
                                 </div>

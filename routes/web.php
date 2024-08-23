@@ -85,12 +85,7 @@ Route::group(['middleware' => ['auth:admin', 'check.role:admin']], function () {
     Route::get('/leadership/get', [App\Http\Controllers\AdminController::class, 'getLeadership'])->name('admin.leadership.data');
     Route::post('/update/leadership', [App\Http\Controllers\AdminController::class, 'updateLeadership']);
     Route::get('/hapus/leadership/{id}', [App\Http\Controllers\AdminController::class, 'hapusLeadership']);
-
     Route::get('/hapus/notifikasi/{id}', [App\Http\Controllers\AdminController::class, 'hapusNotifAdmin']);
-
-    // chart
-    // Route::get('/chart/riwayat', [App\Http\Controllers\ChartController::class, 'chartRiwayat']);
-    // Route::get('/chart/user', [App\Http\Controllers\ChartController::class, 'chartUserAktive']);
 });
 
 
@@ -109,6 +104,7 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::get('/user/detail/{id}', [App\Http\Controllers\UserController::class, 'detail'])->middleware('auth');
     Route::post('/pesan', [App\Http\Controllers\UserController::class, 'pesan'])->middleware('auth');
     Route::post('/user/review', [App\Http\Controllers\UserController::class, 'reviewStore'])->middleware('auth')->name('review.store');
+    Route::post('/payment', [App\Http\Controllers\PaymentController::class, 'createPayment'])->middleware('auth');
 
 });
 
@@ -128,6 +124,8 @@ Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], functio
     
 
 });
+// callback paymnet xendit
+Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhookCallback']);
 
 // chart
 Route::get('/chart/kamar', [App\Http\Controllers\ChartController::class, 'kamarFavorit']);
@@ -135,30 +133,4 @@ Route::get('/chart/booking', [App\Http\Controllers\ChartController::class, 'tota
 
 // get notif
 Route::get('/get/notifikasi', [App\Http\Controllers\PesananController::class, 'getNotifikasi']);
-
-// test pusher
-Route::get('/tes', function(){
-    
-    Notifikasi::create([
-        'nama' => 'dion yy',
-        'kamar' => 'A6',
-        'checkin' => '2024-08-20',
-        'checkout' => '2024-08-19',
-        'status' => 'belum dibaca',
-    ]);
-    
-    $notifikasis = Notifikasi::where('status', 'belum dibaca')->orderBy('created_at', 'desc')->get();
-
-    foreach ($notifikasis as $notifikasi) {
-        broadcast(new NotifikasiBooking([
-            'id' => $notifikasi->id,
-            'nama' => $notifikasi->nama,
-            'kamar' => $notifikasi->kamar,
-            'checkin' => $notifikasi->checkin,
-            'checkout' => $notifikasi->checkout,
-        ]));
-    }
-
-    return 'Berhasil';
-});
 

@@ -197,11 +197,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- main js -->
-    <script src="{{asset('assets/admin/js/master/jquery.cookie.js')}}" type="text/javascript"></script>
-    <script src="{{asset('assets/admin/js/master/off-canvas.js')}}"></script>
-    <script src="{{asset('assets/admin/js/master/hoverable-collapse.js')}}"></script>
-    <script src="{{asset('assets/admin/js/master/template.js')}}"></script>
-    <script src="{{asset('assets/admin/js/master/dashboard.js')}}"></script>
+    <script src="{{asset('assets/admin/js/jquery.cookie.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/admin/js/off-canvas.js')}}"></script>
+    <script src="{{asset('assets/admin/js/hoverable-collapse.js')}}"></script>
+    <script src="{{asset('assets/admin/js/template.js')}}"></script>
+    <script src="{{asset('assets/admin/js/dashboard.js')}}"></script>
     <script src="{{asset('assets/js/owl.carousel.min.js')}}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

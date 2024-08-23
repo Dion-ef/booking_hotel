@@ -39,23 +39,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($data as $item)
+                        @foreach($data as $pemesanan)
                         <tr>
-                            <td>{{ $item->kamar->nama }}</td>
-                            <td>{{ $item->in }}</td>
-                            <td>{{ $item->out }}</td>
-                            <td>{{ $item->jumlah_orang }}</td>
-                            <td>Rp.{{ number_format($item->total) }}</td>
-                            <td>{{ $item->status }}</td>
+                            <td>{{ $pemesanan->kamar->nama }}</td>
+                            <td>{{ $pemesanan->in }}</td>
+                            <td>{{ $pemesanan->out }}</td>
+                            <td>{{ $pemesanan->jumlah_orang }}</td>
+                            <td>Rp.{{ number_format($pemesanan->total) }}</td>
+                            <td>{{ $pemesanan->status }}</td>
                             <td>
-                                @if($item->status == 'unpaid')
-                                <a href="" class="btn btn-warning btn-sm" data-aos="fade-up">Bayar Sekarang</a>
+                                @if($pemesanan->status == 'unpaid')
+                                <form action="/payment" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="pemesanan_id" value="{{ $pemesanan->id }}">
+                                    <button type="submit" class="btn btn-warning">Bayar Sekarang</button>
+                                </form>
                                 @endif
-                                <a class="btn btn-info btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#detail{{$item->id}}">Detail</a>
+                                <a class="btn btn-info btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#detail{{$pemesanan->id}}">Detail</a>
                                 <!-- dilakukan pengecekan apakah user yang user_idnya sudah melakukan review pada kamar tertentu atau belum jika sudah maka tombol tidak akan ditampilkan dan juga sebaliknya -->
-                                 <!-- exists digunakan untuk mengecek apakah ada review yang sudah dibuat user tersebut yang cocok dari query tersebut, jika ada maka hasilnya tru dan sebaliknya -->
-                                @if(!$item->kamar->reviews()->where('users_id', Auth::user()->id)->exists()) 
-                                <a class="btn btn-danger btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#review{{$item->id}}">Review</a>
+                                <!-- exists digunakan untuk mengecek apakah ada review yang sudah dibuat user tersebut yang cocok dari query tersebut, jika ada maka hasilnya tru dan sebaliknya -->
+                                @if(!$pemesanan->kamar->reviews()->where('users_id', Auth::user()->id)->exists())
+                                <a class="btn btn-danger btn-sm btn-action" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#review{{$pemesanan->id}}">Review</a>
                                 @endif
 
                             </td>

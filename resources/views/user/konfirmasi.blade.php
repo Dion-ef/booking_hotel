@@ -168,8 +168,13 @@
                                 </div>
                             </div>
                             <div class="invoice-footer text-center mt-4">
+                                <input type="hidden" name="pemesanan_id" value="{{ $pemesanan->id }}">
                                 <a href="{{ url('user/index') }}" class="btn btn-warning">Kembali ke Beranda</a>
-                                <a href="{{ url('user/index') }}" class="btn btn-primary">Bayar Sekarang</a>
+                                <form action="/payment" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="pemesanan_id" value="{{ $pemesanan->id }}">
+                                    <button type="submit" class="btn btn-primary">Bayar Sekarang</button>
+                                </form>
                             </div>
                         </div>
                     </div>

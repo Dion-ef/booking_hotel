@@ -27,6 +27,10 @@ class Pemesanan extends Model
     {
         return $this->belongsTo('App\Models\Kategori');
     }
+    public function payment()
+    {
+        return $this->belongsTo('App\Models\Payment');
+    }
     // public static function generateKodePemesanan()
     // {
     //     // Merge tabel pemesanan dan tabel riwayat kemudian diambil kodenya untuk diambil numeriknya
