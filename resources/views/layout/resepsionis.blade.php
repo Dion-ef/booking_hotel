@@ -60,7 +60,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/dashboard/resepsionis') ? 'active' : '' }}" href="/dashboard/resepsionis">
-                            <i class="mdi mdi-view-quilt menu-icon"></i>
+                            <i class="mdi mdi-view-dashboard menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
@@ -70,7 +70,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/resepsionis/kamar') ? 'active' : '' }}" href="/resepsionis/kamar">
-                            <i class="mdi mdi-bank menu-icon"></i>
+                            <i class="mdi mdi-hotel menu-icon"></i>
                             <span class="menu-title">Kamar</span>
                         </a>
                     </li>
@@ -80,13 +80,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/resepsionis/booking') ? 'active' : '' }}" href="/resepsionis/booking">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
+                            <i class="mdi mdi-calendar-check menu-icon"></i>
                             <span class="menu-title">Booking</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/resepsionis/riwayat') ? 'active' : '' }}" href="/resepsionis/riwayat">
-                            <i class="mdi mdi-archive menu-icon"></i>
+                            <i class="mdi mdi-history menu-icon"></i>
                             <span class="menu-title">Riwayat</span>
                         </a>
                     </li>
@@ -96,7 +96,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">
-                            <i class="mdi mdi-logout menu-icon"></i>
+                            <i class="mdi mdi-exit-to-app menu-icon"></i>
                             <span class="menu-title">Keluar</span>
                         </a>
                     </li>

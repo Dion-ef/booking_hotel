@@ -40,10 +40,8 @@
 
                     <!-- <button class="btn-login">Login</button> -->
                     <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade">
+                    <i class="fa fa-bars"></i>
 
-                        <span></span>
-                        <span></span>
-                        <span></span>
                     </div>
                     <!-- END menu-toggle -->
 
@@ -95,12 +93,12 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="icon-container">
-                                                <a href="{{route('google.redirect')}}"><img src="{{asset('assets/css/images/g.png')}}" alt=""></a>
+                                                <a href="{{route('google.redirect')}}"><img src="{{asset('images/g.png')}}" alt=""></a>
                                             </div>
                                         </div>
                                         <!-- <div class="col-md-6">
                                             <div class="icon-container">
-                                                <a href=""><img src="{{asset('assets/css/images/f.webp')}}" alt=""></a>
+                                                <a href=""><img src="{{asset('images/f.webp')}}" alt=""></a>
                                             </div>
                                         </div> -->
                                     </div>

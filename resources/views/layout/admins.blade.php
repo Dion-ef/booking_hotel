@@ -49,7 +49,7 @@
         <div class="rw p-0 m-0 proBanner " id="proBanner">
 
             <!-- background berada di navbar baris 22042-->
-            <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
+        <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
                 <!-- <div class="header-text">
                     <span>Pama Hotel</span>
                 </div> -->
@@ -62,7 +62,7 @@
                     </li>
                     <li class="nav-item {{ Request::is('/dashboard/admin') ? 'active' : '' }}">
                         <a class="nav-link {{ Request::is('/dashboard/admin') ? 'active' : '' }}" href="/dashboard/admin">
-                            <i class="mdi mdi-view-quilt menu-icon"></i>
+                            <i class="mdi mdi-view-dashboard menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
@@ -72,19 +72,19 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/kamar/admin') ? 'active' : '' }}" href="/kamar/admin">
-                            <i class="mdi mdi-bank menu-icon"></i>
+                            <i class="mdi mdi-hotel menu-icon"></i>
                             <span class="menu-title">Kamar</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/kategori/admin') ? 'active' : '' }}" href="/kategori/admin">
-                            <i class="mdi mdi-view-headline menu-icon"></i>
+                            <i class="mdi mdi-label menu-icon"></i>
                             <span class="menu-title">Kategori</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/fasilitas/admin') ? 'active' : '' }}" href="/fasilitas/admin">
-                            <i class="mdi mdi-chart-pie menu-icon"></i>
+                            <i class="mdi mdi-sofa menu-icon"></i>
                             <span class="menu-title">Fasilitas</span>
                         </a>
                     </li>
@@ -94,13 +94,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/booking/admin') ? 'active' : '' }}" href="/booking/admin">
-                            <i class="mdi mdi-grid-large menu-icon"></i>
+                            <i class="mdi mdi-calendar-check menu-icon"></i>
                             <span class="menu-title">Booking</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('/riwayat/admin') ? 'active' : '' }}" href="/riwayat/admin">
-                            <i class="mdi mdi-archive menu-icon"></i>
+                            <i class="mdi mdi-history menu-icon"></i>
                             <span class="menu-title">Riwayat</span>
                         </a>
                     </li>
@@ -129,7 +129,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">
-                            <i class="mdi mdi-logout menu-icon"></i>
+                            <i class="mdi mdi-exit-to-app menu-icon"></i>
                             <span class="menu-title">Keluar</span>
                         </a>
                     </li>

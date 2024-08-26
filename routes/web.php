@@ -40,7 +40,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/user/guest/detail/{id}', [App\Http\Controllers\UserController::class, 'detailGuest']);
     Route::get('/user/cek-ketersediaan', [UserController::class, 'cekKetersediaanGuest'])->name('cek-ketersediaan-guest');
     Route::post('/pesan/guest', [App\Http\Controllers\UserController::class, 'pesanGuest']);
-
 });
 
 
@@ -105,7 +104,7 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::post('/pesan', [App\Http\Controllers\UserController::class, 'pesan'])->middleware('auth');
     Route::post('/user/review', [App\Http\Controllers\UserController::class, 'reviewStore'])->middleware('auth')->name('review.store');
     Route::post('/payment', [App\Http\Controllers\PaymentController::class, 'createPayment'])->middleware('auth');
-
+    Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'redirectSuccess']);
 });
 
 // Resepsionis
@@ -121,16 +120,13 @@ Route::group(['middleware' => ['auth.admin', 'check.role:resepsionis']], functio
     Route::get('/resepsionis/riwayat', [App\Http\Controllers\ResepsionisController::class, 'riwayatResepsionis']);
     Route::get('/resepsionis/riwayat/get', [App\Http\Controllers\ResepsionisController::class, 'getRiwayatResepsionis'])->name('resepsionis.riwayat.data');
     Route::get('/hapus/notifikasi/resepsionis/{id}', [App\Http\Controllers\ResepsionisController::class, 'hapusNotifResepsionis']);
-    
-
 });
+
 // callback paymnet xendit
 Route::post('/payment/webhook', [App\Http\Controllers\PaymentController::class, 'webhookCallback']);
-
 // chart
 Route::get('/chart/kamar', [App\Http\Controllers\ChartController::class, 'kamarFavorit']);
 Route::get('/chart/booking', [App\Http\Controllers\ChartController::class, 'totalBooking']);
 
 // get notif
 Route::get('/get/notifikasi', [App\Http\Controllers\PesananController::class, 'getNotifikasi']);
-

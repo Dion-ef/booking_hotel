@@ -292,7 +292,7 @@ $(document).ready(function() {
         const id= $(this).data('id');
 
         Swal.fire({
-            title: 'Apakah Anda yakin ingin checkout?',
+            title: 'Apakah Anda Yakin Ingin Checkout ?',
             text: "Anda tidak akan bisa mengembalikannya!",
             icon: 'warning',
             showCancelButton: true,
@@ -686,7 +686,7 @@ $(document).ready(function() {
         const id= $(this).data('id');
 
         Swal.fire({
-            title: 'Apakah Anda yakin ingin checkout?',
+            title: 'Apakah Anda Yakin Ingin Checkout ?',
             text: "Anda tidak akan bisa mengembalikannya!",
             icon: 'warning',
             showCancelButton: true,

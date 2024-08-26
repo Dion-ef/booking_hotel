@@ -160,10 +160,10 @@
                                 <div class="panel-body">
                                     <p>Untuk kenyamanan Anda, Anda dapat melakukan pembayaran di salah satu bank kami.</p>
                                     <ul class="list-unstyled">
-                                        <img src="{{asset('assets/css/images/bni.png')}}" alt="" class="logo-bank">
-                                        <img src="{{asset('assets/css/images/bri.png')}}" alt="" class="logo-bank">
-                                        <img src="{{asset('assets/css/images/bca.png')}}" alt="" class="logo-bank">
-                                        <img src="{{asset('assets/css/images/permata.png')}}" alt="" class="logo-bank">
+                                        <img src="{{asset('images/bni.png')}}" alt="" class="logo-bank">
+                                        <img src="{{asset('images/bri.png')}}" alt="" class="logo-bank">
+                                        <img src="{{asset('images/bca.png')}}" alt="" class="logo-bank">
+                                        <img src="{{asset('images/permata.png')}}" alt="" class="logo-bank">
                                     </ul>
                                 </div>
                             </div>
@@ -186,103 +186,6 @@
                     <strong>~Have a Nice Day~</strong>
                 </div>
             </div>
-
-            <!-- Invoice 1 - Bootstrap Brain Component -->
-
-            <!-- <div class="card card-invoice">
-                    <div class="row justify-content-center mt-5">
-                        <div class="col-12 col-lg-9 col-xl-8 col-xxl-7">
-                            <div class="row gy-3 mb-3">
-                                <div class="col-6">
-                                    <h2 class="text-uppercase text-endx m-0">Invoice</h2>
-                                </div>
-                                <div class="col-6">
-                                    <a class="d-block text-end" href="#!">
-                                        <img src="./assets/img/bsb-logo.svg" class="img-fluid" alt="BootstrapBrain Logo" width="135" height="44">
-                                    </a>
-                                </div>
-                                <div class="col-12">
-                                    <h4>From</h4>
-                                    <address>
-                                        <strong>Pama Hotel</strong><br>
-                                        Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan, <br>Kec.Tulungagung, Kabupaten Tulungagung<br>Telepon: 0123-456789 <br>
-                                        Email: pama01@gmail.com
-                                    </address>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12 col-sm-6 col-md-8">
-                                    <h4>Kepada</h4>
-                                    <address>
-                                        <strong>{{$pemesanan->nama}}</strong><br>
-                                        Phone: {{$pemesanan->phone}}<br>
-                                        Email: {{$pemesanan->email}}
-                                    </address>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4">
-                                    <h4 class="row">
-                                        <span class="col-6">Invoice </span>
-
-                                    </h4>
-                                    <div class="row">
-                                        <span class="col-6">Date</span>
-                                        <span class="col-6 text-sm-end">{{$pemesanan->tgl_pemesanan}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" class="text-uppercase">Kode</th>
-                                                    <th scope="col" class="text-uppercase">Kamar</th>
-                                                    <th scope="col" class="text-uppercase text-end">Jumlah Orang</th>
-                                                    <th scope="col" class="text-uppercase text-end">Harga Permalam</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-group-divider">
-                                                <tr>
-                                                    <th scope="row">{{$pemesanan->kode}}</th>
-                                                    <td>{{$pemesanan->kamar->nama}}</td>
-                                                    <td class="text-end">{{$pemesanan->jumlah_orang}}</td>
-                                                    <td class="text-end">Rp. {{number_format($pemesanan->harga)}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="table table-striped">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="col-12" class="text-uppercase">Total</th>
-                                                    <th scope="col" class="text-uppercase "><Strong>Rp. {{number_format($pemesanan->total)}}</Strong></th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="panel-body">
-                                <p>Untuk kenyamanan Anda, Anda dapat melakukan pembayaran di salah satu bank kami.</p>
-                                <ul class="list-unstyled">
-                                    <img src="{{asset('assets/css/images/bni.png')}}" alt="" class="logo-bank">
-                                    <img src="{{asset('assets/css/images/bri.png')}}" alt="" class="logo-bank">
-                                    <img src="{{asset('assets/css/images/bca.png')}}" alt="" class="logo-bank">
-                                    <img src="{{asset('assets/css/images/permata.png')}}" alt="" class="logo-bank">
-                                </ul>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 text-end mb-5">
-                                    <a href="{{ url('user/index') }}" class="btn btn-warning">Kembali ke Beranda</a>
-                                    <a href="{{ url('user/index') }}" class="btn btn-primary">Bayar Sekarang</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div </div> -->
         </div>
 </section>
 @endSection

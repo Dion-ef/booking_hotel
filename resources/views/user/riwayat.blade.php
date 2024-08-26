@@ -186,8 +186,8 @@
                     <div class="form-group">
                         <label for="rating">Rating:</label>
                         <div class="rating">
-                            @for ($i = 1; $i
-                            <= 5; $i++)
+                            @for ($i = 5; $i
+                            >= 1; $i--)
                                 <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $item->id }}-{{ $i }}" />
                             <label for="rating{{ $item->id }}-{{ $i }}">★</label>
                             @endfor

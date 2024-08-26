@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Payment;
 use App\Models\Pemesanan;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Xendit\Configuration;
 use Xendit\Invoice\InvoiceApi;
 use Xendit\Invoice\CreateInvoiceRequest;
+use Xendit\Invoice\CustomerObject;
 
 class PaymentController extends Controller
 {
@@ -35,6 +37,8 @@ class PaymentController extends Controller
             'amount' => $pemesanan->total,
             'currency' => 'IDR',
             'invoice_duration' => 172800,
+            'payer_email'=>$pemesanan->email,
+            'success_redirect_url' => url('/payment/success'),
         ]);
         try {
             // buat invoice
@@ -102,5 +106,10 @@ class PaymentController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function redirectSuccess(){
+        // $asset = Asset::all();
+        return view('user.success');
     }
 }

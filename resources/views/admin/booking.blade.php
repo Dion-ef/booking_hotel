@@ -31,79 +31,72 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Detail Pesanan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-start">
                     <div class="container-booking">
-                        <h1 class="text-center">Detail Pemesanan</h1>
-                        <div class="card">
+                        <h1 class="text-center mb-4">Detail Pemesanan</h1>
+                        <div class="card shadow-lg p-4">
                             <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col text-center">
-                                        <h3>Pama Hotel</h3>
-                                        <p class="text-align-center">Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan, <br>Kec.Tulungagung, Kabupaten Tulungagung<br>Telepon: 0123-456789</p>
+                                <div class="row mb-3 text-center">
+                                    <div class="col">
+                                        <h3 class="font-weight-bold">Pama Hotel</h3>
+                                        <p class="text-muted">Jl. Panglima Sudirman Gg. 8 No.16, Kepatihan,<br>Kec.Tulungagung, Kabupaten Tulungagung<br><i class="fa fa-phone"></i> Telepon: 0123-456789</p>
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="row">
-                                    <div class="col">
-                                        <h5>Informasi Pemesan</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold"><i class="fa fa-user"></i> Informasi Pemesan</h5>
                                         <p><strong>Nama:</strong> {{ $item->nama }}</p>
                                         <p><strong>Email:</strong> {{ $item->email }}</p>
                                         <p><strong>Telepon:</strong> {{ $item->phone }}</p>
                                     </div>
-                                    <div class="col">
-                                        <h5>Informasi Pesanan</h5>
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold"><i class="fa fa-info-circle"></i> Informasi Pesanan</h5>
                                         <p><strong>Kode Pemesanan:</strong> {{ $item->kode }}</p>
                                         <p><strong>Tanggal Pemesanan:</strong> {{ $item->tgl_pemesanan }}</p>
-                                        <p><strong>Status:</strong> {{ $item->status }}</p>
+                                        <p><strong>Status:</strong>
+                                            @if ($item->status == 'paid')
+                                            <span class="badge badge-success text-capitalize"">{{ $item->status }}</span>
+                                            @elseif ($item->status == 'unpaid')
+                                            <span class="badge badge-danger text-capitalize"">{{ $item->status }}</span>
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="row">
-                                    <div class="col">
-                                        <h5>Detail Kamar</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold"><i class="fa fa-bed"></i> Detail Kamar</h5>
                                         <p><strong>Kategori Kamar:</strong> {{ $item->kategori->nama }}</p>
                                         <p><strong>Nomor Kamar:</strong> {{ $item->kamar->nama }}</p>
                                         <p><strong>Jumlah Orang:</strong> {{ $item->jumlah_orang }}</p>
                                     </div>
-                                    <div class="col">
-                                        <h5>Durasi Menginap</h5>
+                                    <div class="col-md-6">
+                                        <h5 class="font-weight-bold"><i class="fa fa-calendar"></i> Durasi Menginap</h5>
                                         <p><strong>Check-in:</strong> {{ $item->in }}</p>
                                         <p><strong>Check-out:</strong> {{ $item->out }}</p>
+                                        <p><strong>Total Hari:</strong> {{ $item->duration }} malam</p>
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col">
-                                        <h5>Rincian Biaya</h5>
+                                        <h5 class="font-weight-bold"><i class="fa fa-money-bill-wave"></i> Rincian Biaya</h5>
                                         <p><strong>Harga per Malam:</strong> Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                         <p><strong>Total Biaya:</strong> Rp {{ number_format($item->total, 0, ',', '.') }}</p>
                                     </div>
                                 </div>
                                 <hr>
-                                <div class="row mt-4 booking-btn">
-                                    <div class="modal-footer">
-                                        <!-- <button class="btn btn-primary" onclick="window.print()">Print Nota</button> -->
+                                <div class="row mt-4 text-center">
+                                    <div class="col">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keluar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- <form role="form" method="POST" action="/update/kamar">
-                                    @csrf
-                                    <div class="form">
-                                        <h1>{{$item->kode}}</h1>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keluar</button>
-                                        <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
-                                    </div>
-                                </form> -->
 
                 </div>
 
@@ -150,7 +143,7 @@
                             </div>
                             <label for="tgl_pemesanan" class="form-label fw-bold">Tanggal_pemesanan</label>
                             <input type="status" name="tgl_pemesanan" class="form-control mb-2" value="{{$item->tgl_pemesanan}}">
-                            <label for="status" class="form-label fw-bold" >Harga</label>
+                            <label for="status" class="form-label fw-bold">Harga</label>
                             <input type="status" name="harga" class="form-control mb-2" value="{{$item->harga}}">
                             <label for="status" class="form-label fw-bold">Total</label>
                             <input type="status" name="total" class="form-control mb-2" value="{{$item->total}}">

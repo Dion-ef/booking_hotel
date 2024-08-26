@@ -64,12 +64,17 @@ class AdminController extends Controller
             $data = Kamar::with('kategori')->select(['*']); // Ambil data kamar beserta kategori, seslect * maka diambil semua
             return DataTables::eloquent($data)
                 ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    $backgroundColor = $row->status == 'dipakai' ? 'green' : 'red';
+                    $hurufBesar = ucfirst($row->status);
+                    return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$hurufBesar. '</span>';
+                })
                 ->addColumn('actions', function ($row) {
                     $editButton = '<a class="btn btn-warning btn-sm btn-action" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editKamar' . $row->id . '">Edit</a>';
                     $deleteButton = '<a href="/hapus/kamar/' . $row->id . '" class="btn btn-danger btn-sm delete-button" data-id="' . $row->id . '"> Hapus</a>';
                     return $editButton . ' ' . $deleteButton;
                 })
-                ->rawColumns(['actions'])
+                ->rawColumns(['status','actions'])
                 ->toJson();
         }
     }
@@ -271,15 +276,20 @@ class AdminController extends Controller
 
         return DataTables::of($bookings)
             ->addIndexColumn()
+            ->addColumn('status', function ($row) {
+                $backgroundColor = $row->status == 'paid' ? 'green' : 'red';
+                $statusLabel = ucfirst($row->status);
+                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$statusLabel. '</span>';
+            })
             ->addColumn('action', function ($row) {
                 return '
-                <a class="btn btn-primary btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
-                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#edit' . $row->id . '"> Edit</a>
+                <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
+                <a class="btn btn-danger btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#edit' . $row->id . '"> Edit</a>
                 <br>
-                <a href="/hapus/booking/' . $row->id . '" class="btn btn-danger btn-sm delete-button mt-1" data-id="' . $row->id . '"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
+                <a href="/hapus/booking/' . $row->id . '" class="btn btn-primary btn-sm delete-button mt-1" data-id="' . $row->id . '"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
             ';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['status','action'])
             ->make(true);
         // i class="fa-solid fa-eye"></i> <i class="fa-solid fa-xmark"></i>
     }
@@ -351,12 +361,17 @@ class AdminController extends Controller
 
         return DataTables::of($bookings)
             ->addIndexColumn()
+            ->addColumn('status', function ($row) {
+                $backgroundColor = $row->status == 'selesai' ? 'orange' : 'red';
+                $statusLabel = ucfirst($row->status);
+                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$statusLabel. '</span>';
+            })
             ->addColumn('action', function ($row) {
                 return '
                 <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
             ';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['status','action'])
             ->make(true);
         // <i class="fa-solid fa-pen-to-square"></i>
     }

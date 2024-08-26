@@ -1717,3 +1717,29 @@ textarea.form-control {
   font-weight: bold;
   color: #ffba5a;
 }
+.succes {
+  background-color: #f8f9fa;
+}
+
+.success-card {
+  max-width: 500px;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.success-icon {
+  font-size: 100px;
+  color: #28a745;
+}
+
+.card-body {
+  margin-top: 20px;
+}
+.icon-success {
+  font-size: 75px;
+  color: #4caf50; /* Hijau */
+  margin-bottom: 20px;
+}
