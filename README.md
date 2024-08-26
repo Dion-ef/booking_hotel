@@ -31,34 +31,17 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+## Tujuan
+Tujuan dikembangkan sistem booking hotel ini adalah untuk menyelesaikan masalah yang dihadapi oleh Pama Hotel, dimana sebelum adanya sistem informasi booking hotel ini, proses pemesanan kamar di Pama Hotel masih dilakukan secara manual melalui telepon, email atau datang langsung. Proses tersebut mempunyai banyak kelemahan seperti overbooking, kesalahan pencatatan data tamu dan permasalahan ketersediaan kamar tepat waktu. Tanpa menggunakan sistem informasi, data tamu di Pama Hotel disimpan secara terpisah dalam berbagai catatan manual. Hal ini mempersulit pelacakan riwayat pelanggan, dan menjadwalkan layanan.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Hasil
+Sistem yang dikembangkan mampu menyediakan fitur-fitur penting seperti pencarian kamar yang mudah, pemesanan online yang terintegrasi dengan sistem pembayaran, serta notifikasi real-time bagi pelanggan dan staf hotel. Selain itu, sistem ini juga menawarkan dashboard analitik untuk manajemen, yang memungkinkan mereka untuk memonitor performa hotel dan membuat keputusan berbasis data.
 
-## Contributing
+## Saran
+- Disarankan agar sistem ini dilengkapi dengan modul pengelolaan hubungan pelanggan (CRM) yang lebih canggih. Dengan adanya fitur ini, Pama Hotel dapat mempersonalisasi layanan berdasarkan preferensi dan riwayat pelanggan, serta melakukan pemasaran yang lebih efektif melalui analisis data pelanggan.
+- Meskipun sistem saat ini sudah dilengkapi dengan langkah-langkah keamanan dasar, disarankan untuk melakukan audit keamanan secara berkala dan menerapkan protokol keamanan yang lebih kuat, seperti enkripsi data dan autentikasi multi-faktor, untuk melindungi informasi sensitif dari ancaman siber.
+- Sistem yang dikembangkan perlu dievaluasi secara berkala untuk memastikan bahwa semua fitur berfungsi dengan baik dan memenuhi kebutuhan operasional hotel. Selain itu, disarankan untuk terus mengembangkan sistem sesuai dengan feedback pengguna dan tren teknologi terbaru agar sistem tetap relevan dan efektif.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Terimakasih
+By : Dion Eka Fahrezi
