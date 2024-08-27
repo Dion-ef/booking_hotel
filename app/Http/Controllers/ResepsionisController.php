@@ -32,6 +32,9 @@ class ResepsionisController extends Controller
         $checkInHariIni = Pemesanan::whereDate('in', Carbon::today())->count();
         $pesanUser = PesanUser::limit(3)->get();
         $asset = Asset::all();
+        if ($asset->isEmpty()) {
+            return redirect()->back()->with('error', 'Asset tidak ditemukan');
+        }
         return view('resepsionis.dashboard', compact('data', 'totalKamarKosong', 'asset','totalBooking','totalKamarTerpakai','pesanUser','checkInHariIni','notifikasi'));
     }
 

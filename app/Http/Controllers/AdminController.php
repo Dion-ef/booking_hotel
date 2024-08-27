@@ -33,6 +33,9 @@ class AdminController extends Controller
         $pesanUser = PesanUser::limit(3)->get();
         $checkInHariIni = Pemesanan::whereDate('in', Carbon::today())->count();
         $asset = Asset::all();
+        if ($asset->isEmpty()) {
+            return redirect()->back()->with('error', 'Asset tidak ditemukan');
+        }
         return view('admin.dashboard', compact('data', 'totalKamarKosong', 'asset', 'totalBooking', 'totalKamarTerpakai', 'pesanUser', 'checkInHariIni'));
     }
 
