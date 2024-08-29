@@ -108,8 +108,6 @@ class UserController extends Controller
 
     public function cekKetersediaan(Request $request)
     {
-
-
         $asset = Asset::all();
         $checkinDate = Carbon::parse($request->checkin_date);
         $checkoutDate = Carbon::parse($request->checkout_date);
@@ -133,7 +131,6 @@ class UserController extends Controller
             })
             ->get();
 
-        // Mengembalikan hasil ke view
         return view('user.ketersediaan', compact('kamarTersedia', 'checkinDate', 'checkoutDate', 'jumlahOrang', 'asset'));
     }
 
@@ -154,9 +151,6 @@ class UserController extends Controller
         }
         return view('user.detail', compact('user', 'data', 'kamar', 'kategori', 'gambar', 'fasilitas', 'kamars', 'asset'));
     }
-
-
-
 
 
 

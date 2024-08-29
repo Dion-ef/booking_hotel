@@ -70,14 +70,14 @@ class AdminController extends Controller
                 ->addColumn('status', function ($row) {
                     $backgroundColor = $row->status == 'dipakai' ? 'green' : 'red';
                     $hurufBesar = ucfirst($row->status);
-                    return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$hurufBesar. '</span>';
+                    return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' . $hurufBesar . '</span>';
                 })
                 ->addColumn('actions', function ($row) {
                     $editButton = '<a class="btn btn-warning btn-sm btn-action" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editKamar' . $row->id . '">Edit</a>';
                     $deleteButton = '<a href="/hapus/kamar/' . $row->id . '" class="btn btn-danger btn-sm delete-button" data-id="' . $row->id . '"> Hapus</a>';
                     return $editButton . ' ' . $deleteButton;
                 })
-                ->rawColumns(['status','actions'])
+                ->rawColumns(['status', 'actions'])
                 ->toJson();
         }
     }
@@ -134,7 +134,7 @@ class AdminController extends Controller
     {
         $user = auth()->id();
         $data = Admin::where('id', $user)->first();
-        $kategori = Kategori::paginate(3);
+        $kategori = Kategori::all();
         $getgambar = Gambar::all();
         $asset = Asset::all();
         $fasilitas = Fasilitas::all();
@@ -170,10 +170,9 @@ class AdminController extends Controller
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
-                    $editButton = '<a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#editKategori' . $row->id . '"> Edit</a>';
+                    $editButton = '<a class="btn btn-warning btn-sm btn-action" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editTabelKategori' . $row->id . '">Edit</a>';
                     $deleteButton = '<a href="/hapus/kategori/' . $row->id . '" class="btn btn-danger btn-sm delete-button-kategori" data-id="' . $row->id . '"> Hapus</a>';
-                    $gambarButton = '<a class="btn btn-primary btn-sm btn-action mt-2" data-bs-toggle="modal" data-bs-target="#gambarKategori' . $row->id . '" > Tambah Gambar</a>';
-                    return $editButton . ' ' . $deleteButton . '<br>' . $gambarButton;
+                    return $editButton . ' ' . $deleteButton;
                 })
                 ->rawColumns(['fasilitas', 'gambar', 'action'])
                 ->make(true);
@@ -187,6 +186,7 @@ class AdminController extends Controller
             'harga' => 'required|numeric',
             'fasilitas' => 'required|array',
             'deskripsi' => 'required',
+            'gambar.*' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048',
 
         ]);
 
@@ -200,47 +200,15 @@ class AdminController extends Controller
 
         // Menyimpan relasi fasilitas dengan kategori
         $kategori->fasilitas()->attach($request->fasilitas);
-        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil ditambahkan!');
-    }
-
-    public function hapusKategori($id)
-    {
-        DB::table('kategori')->where('id', $id)->delete();
-        Alert::success('Dihapus', 'Kategori Berhasil Dihapus!');
-
-        return redirect('/kategori/admin');
-    }
-    public function updateKategori(Request $request)
-    {
-
-        $kategori = Kategori::find($request->id);
-        $kategori->nama = $request->nama;
-        $kategori->harga = $request->harga;
-        $kategori->deskripsi = $request->deskripsi;
-        $kategori->save();
-
-
-        $kategori->fasilitas()->sync($request->fasilitas);
-        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil diubah!');
-    }
-    public function tambahGambar(Request $request, int $id)
-    {
-        // Validasi input
-        $request->validate([
-            'gambar.*' => 'required|image|mimes:png,jpg,jpeg,webp|max:2048', //  ukuran maksimal 2MB
-        ]);
-        $kategori = Kategori::findOrFail($id);
-
-        $imageData = [];
 
         // Proses pengunggahan gambar
+        $imageData = [];
         if ($request->hasFile('gambar')) {
             $files = $request->file('gambar');
             foreach ($files as $file) {
                 $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $path = "uploads/";
-                $path = $file->store('uploads', 'public', $filename);
+                $filename = time() . '_' . uniqid() . '.' . $extension;
+                $path = $file->storeAs('uploads', $filename, 'public');
 
                 $imageData[] = [
                     'kategori_id' => $kategori->id,
@@ -248,15 +216,68 @@ class AdminController extends Controller
                 ];
             }
         }
-        Gambar::insert($imageData);
 
-        return redirect()->back()->with('succes', 'Berhasill');
+        // Simpan data gambar ke dalam tabel gambar
+        if (!empty($imageData)) {
+            Gambar::insert($imageData);
+        }
+        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil ditambahkan!');
     }
-    public function hapusGambar($id)
+
+    public function hapusKategori($id)
     {
-        DB::table('gambar')->where('id', $id)->delete();
-        Alert::success('Dihapus', 'Gambar Berhasil Dihapus!');
+        // Hapus data gambar terkait dengan kategori
+        $kategori = Kategori::findOrFail($id);
+        foreach ($kategori->gambar as $gambar) {
+            // Hapus file gambar dari storage jika diperlukan
+            Storage::disk('public')->delete($gambar->gambar);
+
+            // Hapus data gambar dari database
+            $gambar->delete();
+        }
+
+        // Hapus kategori
+        $kategori->delete();
+
+        Alert::success('Dihapus', 'Kategori Berhasil Dihapus!');
         return redirect('/kategori/admin');
+    }
+    public function updateKategori(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'required',
+            'gambar.*' => 'image|mimes:png,jpg,jpeg,webp|max:2048',
+        ]);
+    
+        $kategori = Kategori::findOrFail($request->id);
+        $kategori->update([
+            'nama' => $request->nama,
+            'harga' => $request->harga,
+            'deskripsi' => $request->deskripsi,
+        ]);
+        
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama
+            foreach ($kategori->gambar as $gambar) {
+                Storage::disk('public')->delete($gambar->gambar);
+                $gambar->delete();
+            }
+        }
+        // Proses pengunggahan gambar baru
+        if ($request->hasFile('gambar')) {
+            foreach ($request->file('gambar') as $file) {
+                $path = $file->store('uploads', 'public');
+                Gambar::create([
+                    'kategori_id' => $kategori->id,
+                    'gambar' => $path,
+                ]);
+            }
+        }
+    
+        $kategori->fasilitas()->sync($request->fasilitas);
+        return redirect('/kategori/admin')->with('success', 'Kategori Berhasil Diperbarui!');
     }
 
 
@@ -282,7 +303,7 @@ class AdminController extends Controller
             ->addColumn('status', function ($row) {
                 $backgroundColor = $row->status == 'paid' ? 'green' : 'red';
                 $statusLabel = ucfirst($row->status);
-                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$statusLabel. '</span>';
+                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' . $statusLabel . '</span>';
             })
             ->addColumn('action', function ($row) {
                 return '
@@ -292,7 +313,7 @@ class AdminController extends Controller
                 <a href="/hapus/booking/' . $row->id . '" class="btn btn-primary btn-sm delete-button mt-1" data-id="' . $row->id . '"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Check Out</a>
             ';
             })
-            ->rawColumns(['status','action'])
+            ->rawColumns(['status', 'action'])
             ->make(true);
         // i class="fa-solid fa-eye"></i> <i class="fa-solid fa-xmark"></i>
     }
@@ -367,14 +388,14 @@ class AdminController extends Controller
             ->addColumn('status', function ($row) {
                 $backgroundColor = $row->status == 'selesai' ? 'orange' : 'red';
                 $statusLabel = ucfirst($row->status);
-                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' .$statusLabel. '</span>';
+                return '<span style= " display:inline-block; background-color: ' . $backgroundColor . '; color: white; padding: 5px 15px; border-radius: 10px; text-align: center; font-weight:bold; min-width: 80px; ">' . $statusLabel . '</span>';
             })
             ->addColumn('action', function ($row) {
                 return '
                 <a class="btn btn-warning btn-sm btn-action" data-bs-toggle="modal" data-bs-target="#detail' . $row->id . '">Detail</a>
             ';
             })
-            ->rawColumns(['status','action'])
+            ->rawColumns(['status', 'action'])
             ->make(true);
         // <i class="fa-solid fa-pen-to-square"></i>
     }
@@ -642,5 +663,4 @@ class AdminController extends Controller
 
         // return response()->json(['success' => true]);
     }
-
 }
