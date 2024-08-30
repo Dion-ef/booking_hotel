@@ -21897,16 +21897,29 @@ dl li {
 
 .sidebar .nav .nav-item .nav-link i.menu-arrow {
   display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin-left: auto;
   margin-right: 0.2rem;
   color: #ffffff;
   font-weight: normal;
 }
 
-.sidebar .nav .nav-item .nav-link i.menu-arrow:before {
-  content: "\F142";
+
+.sidebar .nav .nav-item .nav-link[aria-expanded="false"] i.menu-arrow:before {
+  content: "\F142" !important;
+  font-family: "Material Design Icons";
+  font-style: normal;
+  display: block;
+  font-size: 1.1rem;
+  line-height: 10px;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+.sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow:before {
+  content: "\F142" !important;
   font-family: "Material Design Icons";
   font-style: normal;
   display: block;

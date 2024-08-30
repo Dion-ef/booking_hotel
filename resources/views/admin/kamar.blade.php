@@ -23,7 +23,7 @@
                                         @csrf
                                         <div class="form">
                                             <label for="name" class="form-label fw-bold">Nama</label>
-                                            <input type="name" name="nama" class="form-control mb-3" required>
+                                            <input type="name" name="nama" class="form-control mb-3" placeholder="Nama" required>
                                             <label class="fw-bold mb-1" for="kategori">Jenis Kamar</label>
                                             <select class="form-select mb-3" id="kategori_id" name="kategori_id" required>
                                                 @foreach ($kategori as $item)
@@ -36,7 +36,7 @@
                                                 <option value="dipakai">dipakai</option>
                                             </select>
                                             <label for="status" class="form-label fw-bold">Kapasitas</label>
-                                            <input type="status" name="kapasitas" class="form-control" required>
+                                            <input type="status" name="kapasitas" class="form-control" placeholder="Kapasitas" required>
                                         </div>
 
                                         <div class="modal-footer">

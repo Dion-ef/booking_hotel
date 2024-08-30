@@ -23,20 +23,21 @@
 
     <!-- datatables -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
     <style>
-        @foreach($asset as $item) .navbar::before {
+        @foreach($asset as $item) 
+        .navbar::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('{{ asset(' storage/' . $item->background_img) }}') center center no-repeat;
+            background: url('{{ asset('storage/' . $item->background_img) }}') center center no-repeat;
             background-size: cover;
             filter: brightness(50%);
             z-index: -1;
         }
-
         @endforeach
     </style>
     @yield('link')
@@ -298,7 +299,7 @@
                         notifications.forEach(notification => {
                             const newNotification = document.createElement('a');
                             newNotification.classList.add('dropdown-item', 'preview-item');
-                            newNotification.setAttribute('href', `/hapus/notifikasi/${notification.id}`);
+                            newNotification.setAttribute('href', `/hapus/notifikasi/resepsionis/${notification.id}`);
                             newNotification.setAttribute('data-id', notification.id);
                             newNotification.innerHTML = `
                     <div class="preview-thumbnail">
@@ -342,7 +343,7 @@
 
                 const newNotification = document.createElement('a');
                 newNotification.classList.add('dropdown-item', 'preview-item');
-                newNotification.setAttribute('href', `/hapus/notifikasi/${notificationId}`);
+                newNotification.setAttribute('href', `/hapus/notifikasi/resepsionis/${notificationId}`);
                 newNotification.setAttribute('data-id', notificationId);
                 newNotification.innerHTML = `
         <div class="preview-thumbnail">

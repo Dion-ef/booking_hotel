@@ -22,12 +22,12 @@
                                         @csrf
                                         <div class="form">
                                             <label for="name" class="form-label fw-bold">Nama</label>
-                                            <input type="name" name="nama" class="form-control mb-3" required>
+                                            <input type="name" name="nama" class="form-control mb-3" placeholder="Nama" required>
                                             <label for="name" class="form-label fw-bold">Jabatan</label>
-                                            <input type="name" name="jabatan" class="form-control mb-3" required>
+                                            <input type="name" name="jabatan" class="form-control mb-3" placeholder="Jabatan" required>
                                             <div class="mb-3">
                                                 <label for="exampleFormControlTextarea1" class="form-label fw-bold">Motivasi</label>
-                                                <textarea class="form-control " id="exampleFormControlTextarea1" rows="3" name="motivasi"></textarea>
+                                                <textarea class="form-control " id="exampleFormControlTextarea1" rows="3" name="motivasi" placeholder="Motivasi"></textarea>
                                             </div>
                                             <label for="name" class="form-label fw-bold">Gambar</label>
                                             <div class="input-group mb-3 d-flex">

@@ -49,7 +49,7 @@
         <div class="rw p-0 m-0 proBanner " id="proBanner">
 
             <!-- background berada di navbar baris 22042-->
-        <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
+            <nav class="sidebar sidebar-offcanvas d-flex flex-column flex-shrink-0" id="sidebar">
                 <!-- <div class="header-text">
                     <span>Pama Hotel</span>
                 </div> -->
@@ -109,12 +109,12 @@
                         <span></span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <a class="nav-link {{ Request::is('kelola/asset/admin') || Request::is('kelola/leadership/admin') ? 'active' : '' }}" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="{{ Request::is('kelola/asset/admin') || Request::is('kelola/leadership/admin') ? 'true' : 'false' }}" aria-controls="ui-basic">
                             <i class="mdi mdi-palette menu-icon"></i>
                             <span class="menu-title">CMS</span>
                             <i class="menu-arrow"></i>
                         </a>
-                        <div class="collapse" id="ui-basic">
+                        <div class="collapse {{ Request::is('kelola/asset/admin') || Request::is('kelola/leadership/admin') ? 'show' : '' }}" id="ui-basic">
                             <a class="nav-link {{ Request::is('/kelola/asset/admin') ? 'active' : '' }}" href="/kelola/asset/admin">
                                 <span class="menu-title">Content</span>
                             </a>
@@ -275,6 +275,7 @@
     <script src="{{asset('assets/admin/js/template.js')}}"></script>
     <script src="{{asset('assets/admin/js/dashboard.js')}}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
+    
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>

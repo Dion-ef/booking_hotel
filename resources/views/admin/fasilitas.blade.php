@@ -22,7 +22,7 @@
                                         @csrf
                                         <div class="form">
                                             <label for="name" class="form-label fw-bold">Nama</label>
-                                            <input type="name" name="nama" class="form-control" required>
+                                            <input type="name" name="nama" class="form-control" placeholder="Nama" required>
                                         </div>
 
                                         <div class="modal-footer">
