@@ -12,20 +12,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Pama Hotel</title>
     <style>
-        @foreach($asset as $item) .site-hero-login::before {
+        @foreach($asset as $item)
+        .site-hero-login::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('{{ asset(' storage/' . $item->background_img) }}');
+            background-image: url('{{ asset('storage/' . $item->background_img) }}');
             background-repeat: no-repeat;
             background-size: cover;
             filter: brightness(50%);
             z-index: -1;
         }
-
         @endforeach
     </style>
 </head>
